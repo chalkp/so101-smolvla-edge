@@ -17,7 +17,7 @@ dependencies = [
 jp7 = ["torch>=2.14"]  # JetPack 7 (CUDA 13, Python 3.12), torch from pytorch.org cu132
 jp6 = ["torch==2.11.0; python_version == '3.10'", "nvidia-cudss-cu12"]  # JetPack 6, jetson-ai-lab
 desktop = ["torch>=2.9"]  # x86 with an NVIDIA driver >= 580, torch from pytorch.org cu130
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "ruff>=0.17"]
 
 [build-system]
 requires = ["hatchling"]
@@ -61,3 +61,10 @@ explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
