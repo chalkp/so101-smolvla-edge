@@ -8,9 +8,13 @@ unnormalisation. On a Jetson the steps are bound by kernel launches from the slo
 the whole chunk is captured once and replayed with one launch. Everything the graph touches lives
 in a fixed buffer that `infer` only writes into.
 
-`compile=True` runs torch.compile per stage ("autotune" also autotunes the prefix GEMMs) and
-falls back to the eager kernels with a log line where it cannot run. Set TORCHINDUCTOR_CACHE_DIR,
-or every start compiles again.
+Options:
+
+    vision="trt"         the vision tower as a TensorRT engine (`trt_vision.py`), inside the graph
+    compile=True         torch.compile per stage; "autotune" also autotunes the prefix GEMMs
+
+Compile falls back to the eager kernels with a log line where it cannot run, and leaves the
+TensorRT stage alone. Set TORCHINDUCTOR_CACHE_DIR, or every start compiles again.
 """
 
 from __future__ import annotations
@@ -58,6 +62,8 @@ class Engine:
         cuda_graph: bool = True,
         compile: bool | str = False,
         warmup: int = 3,
+        vision: str = "torch",
+        trt_precision: str = "bf16",
     ):
         self.device = dev = torch.device(device)
         cdt = {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}[dtype]
@@ -113,7 +119,23 @@ class Engine:
         self.kx, self.vx = heads(L, cross), heads(L, cross)
 
         self.timing = Timing()
-        self._encode = self.model.encode_images
+        self.trt = None
+        if vision == "trt":
+            from .trt_vision import TrtVision, plan_path
+
+            plan = plan_path(bundle, trt_precision)
+            if not plan.exists():
+                raise SystemExit(
+                    f"no TensorRT plan at {plan}; build it on this device: "
+                    f"so101-smolvla-edge build-trt {bundle}"
+                )
+            rows = s.n_cams * s.img_tokens
+            self.trt = TrtVision(plan, s.n_cams, s.image_size, rows, s.text_dim, dev)
+            log.info("vision: TensorRT %s (%s)", trt_precision, plan.name)
+        elif vision != "torch":
+            raise ValueError(f"vision must be 'torch' or 'trt', not {vision!r}")
+        self._encode = self.trt if self.trt is not None else self.model.encode_images
+
         self._stages = [self._vision, self._prefix, self._denoise]
         if compile:
             self._compile_stages(bundle, compile)
@@ -127,14 +149,18 @@ class Engine:
                     self._fwd()
 
     def _compile_stages(self, bundle, how: bool | str) -> None:
-        """Compile each stage; stay eager if that fails.
+        """Compile the stages TensorRT leaves to torch; stay eager if that fails.
 
         The cache goes next to the bundle unless TORCHINDUCTOR_CACHE_DIR is set, so a restart
         reuses it.
         """
         os.environ.setdefault("TORCHINDUCTOR_CACHE_DIR", str(Path(bundle).resolve() / "inductor"))
+        covered = [self.trt is not None, False, False]
         try:
-            compiled = [self._compile(f, how) for f in self._stages]
+            compiled = [
+                f if done else self._compile(f, how)
+                for f, done in zip(self._stages, covered, strict=True)
+            ]
             with torch.no_grad():
                 rows = compiled[0]()
                 compiled[1](rows)
