@@ -1,0 +1,7 @@
+# Simulated servos and the bundle's golden images, no hardware:
+#   so101-smolvla-edge run configs/sim.yaml --sim
+bundle: ~/so101/bundles/REPLACE
+arms:
+  left: {port: sim, calibration: sim}
+  right: {port: sim, calibration: sim}
+log_dir: ~/so101-logs/sim

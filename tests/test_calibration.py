@@ -1,5 +1,6 @@
 """Servo ticks to policy radians in both calibration conventions, and the `calibration` report."""
 
+import json
 import math
 
 import numpy as np
@@ -60,3 +61,25 @@ def test_drive_mode_flips(calib_file):
         a = load_lerobot_calibration(calib_file("a"), "", conv)[0]
         b = load_lerobot_calibration(calib_file("b", drive_mode=1), "", conv)[0]
         assert math.isclose(a.to_rad(1000), -b.to_rad(1000))
+
+
+def test_calibration_report_flags_unreachable_simulator_range(tmp_path, capsys):
+    """`calibration` flags a joint swept short of the simulator's limits, but not a full sweep.
+
+    The full-turn wrist_roll also shows the 1.125 the stretched convention would scale it by."""
+    from so101_smolvla_edge.cli import main
+
+    motors = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
+    full_turn = {"drive_mode": 0, "homing_offset": 0, "range_min": 0, "range_max": 4095}
+    cal = {m: {"id": i + 1, **full_turn} for i, m in enumerate(motors)}
+    # +-70 deg, short of the simulator's +-110
+    cal["shoulder_pan"].update(range_min=2047 - 800, range_max=2047 + 800)
+    f = tmp_path / "left.json"
+    f.write_text(json.dumps(cal))
+    assert main(["calibration", str(f)]) == 0
+    out = capsys.readouterr().out
+    pan = next(line for line in out.splitlines() if line.strip().startswith("shoulder_pan"))
+    roll = next(line for line in out.splitlines() if line.strip().startswith("wrist_roll"))
+    assert "clamp" in pan and "below -70" in pan and "above 70" in pan
+    assert "clamp" not in roll and "1.125" in roll
+    assert "1 joint(s) cannot reach" in out

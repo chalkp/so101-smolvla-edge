@@ -1,0 +1,182 @@
+# Bimanual SO-101 followers and three cameras on a Jetson Orin Nano.
+# Copy it, then replace every REPLACE. Stable device paths:
+#   ls -l /dev/serial/by-path/      one USB adapter per arm (CH343 boards often share a serial
+#                                   number, so by-id names and ttyACMn order are not stable)
+#   ls -l /dev/v4l/by-path/         use the *-video-index0 entries
+bundle: ~/so101/bundles/REPLACE              # from `so101-smolvla-edge export`, whole directory
+
+arms:                                        # order here is the order in the logs; joint names are
+  left:                                      # <arm>_<motor> and must match the bundle's
+    port: /dev/serial/by-path/REPLACE-left
+    calibration: ~/so101/calibration/so101_follower_left.json    # lerobot-calibrate output
+    echo: auto                               # auto | on | off (auto probes once at connect)
+    convention: degrees                      # degrees: true joint angles about the calibrated
+                                             # midpoint (lerobot use_degrees, as LeHome's real-robot
+                                             # code). stretched: calibrated range mapped onto the
+                                             # simulator's limits
+  right:
+    port: /dev/serial/by-path/REPLACE-right
+    calibration: ~/so101/calibration/so101_follower_right.json
+    echo: auto
+    convention: degrees
+
+# Leader arms for demonstrations and takeovers (`take` at the console). Leave this out until the
+# policy runs on the followers alone. Same keys as `arms`. The leaders are only read, never torqued.
+# Calibrate each with `lerobot-calibrate --teleop.type=so101_leader` (docs/real_robot.md).
+# leaders:
+#   left:
+#     port: /dev/serial/by-path/REPLACE-leader-left
+#     calibration: ~/so101/calibration/so101_leader_left.json
+#   right:
+#     port: /dev/serial/by-path/REPLACE-leader-right
+#     calibration: ~/so101/calibration/so101_leader_right.json
+
+teleop:
+  rate_hz: 60                                # leader read rate
+  max_engage_rad: 1.0                        # `take` is refused while a leader joint is further
+                                             # than this from its follower
+  engage_speed: 1.0                          # rad/s while the followers close that gap (those
+                                             # frames are not recorded as labels)
+  align_rad: 0.15                            # follow at full speed once every joint is this close
+  max_leader_age_s: 0.2                      # hold if the leader reading is older than this
+
+record:                                      # one directory per episode: JPEG frames, joint
+                                             # states, goals and who was driving
+  enabled: false                             # or `so101-smolvla-edge run CONFIG --record`
+  dir: ~/so101-data                          # put it on the NVMe; three cameras write ~4 MB/s
+  fps: 30                                    # 1 / action_dt, so one frame is one policy action
+  jpeg_quality: 92
+
+cameras:                                     # keys must match the bundle's meta.json "cameras"
+  # The policy was trained on the simulator's views: 67 deg horizontal field of view for the top
+  # camera, 53.5 deg for the wrists. `crop` keeps that fraction of the frame width around the
+  # centre, then resizes to width x height: crop = tan(sim_hfov / 2) / tan(camera_hfov / 2),
+  # e.g. 0.82 for a 78 deg top camera, 0.72 for a 70 deg wrist camera. Capture larger
+  # (capture_width, capture_height) so the cropped frame keeps its detail.
+  # Check with `so101-smolvla-edge cameras <this file>` (docs/real_robot.md).
+  #
+  # Optional per camera:
+  #   flip: true                rotate 180 degrees (arm bases must be at the top of the top view)
+  #   controls: {"Focus, Automatic Continuous": 0, "Focus, Absolute": 208, "Exposure, Dynamic Framerate": 0}
+  #                             V4L2 controls, applied at every start; list each camera's with
+  #                             `so101-smolvla-edge cameras <this file> --controls`
+  #   gain: 0.88, gamma: 2.0    tone transform out = 255 * gain * (in/255) ** gamma, for a camera
+  #                             that overexposes and has no exposure control (gain brings clipped
+  #                             white down to the simulator's 225)
+  observation.images.top_rgb:   {device: /dev/v4l/by-path/REPLACE-top-video-index0,   width: 640, height: 480, fps: 30, crop: 1.0}
+  observation.images.left_rgb:  {device: /dev/v4l/by-path/REPLACE-left-video-index0,  width: 640, height: 480, fps: 30, crop: 1.0}
+  observation.images.right_rgb: {device: /dev/v4l/by-path/REPLACE-right-video-index0, width: 640, height: 480, fps: 30, crop: 1.0}
+
+log_inputs: true                             # save the frames given to the model at every
+                                             # inference: <log_dir>/<run>/inputs/<seq>_<camera>.jpg
+viz:                                         # live Rerun view (docs/real_robot.md), or `run --rerun`
+  rerun: false
+  grpc_port: 9876                            # viewer: rerun --connect rerun+http://<robot>:9876/proxy
+  web_port: 9090                             # browser: the URL printed at start (0 = no web viewer)
+  live_hz: 5                                 # camera frames and joint traces per second
+
+baud: 1000000
+reply_margin_s: 0.0025                       # s; USB and servo turnaround per bus transaction
+log_dir: ~/so101-logs
+log_every: 1                                 # write every n-th control tick to ticks.csv
+                                             # (1 is ~120 KB/s for two arms)
+
+inference:
+  dtype: bf16                                # fp32 is ~2.5x slower; check either with
+                                             # `so101-smolvla-edge verify`
+  residual: fp32                             # fp32: reference numerics; compute: all bf16, a
+                                             # little faster
+  cuda_graph: true
+  compile: autotune                          # torch.compile per stage and autotuned prefix GEMMs.
+                                             # Needs Triton, falls back to eager if it fails
+  kernel_cache: ~/so101/kernel-cache         # compiled kernels. Empty, a start compiles for minutes
+                                             # on an Orin; warm, it takes about one
+  vision: trt                                # TensorRT vision tower; build both plans on the robot:
+                                             #   so101-smolvla-edge build-trt <bundle> --precision bf16 int8
+  trt_precision: int8                        # use bf16 for the first real sessions: the int8 clips
+                                             # were calibrated on simulator frames, not on real
+                                             # camera images. int8 needs the bundle's
+                                             # trt/act_clip.json, bf16 needs nothing extra
+  replan_actions: 45                         # execute 45 of each chunk's 50 actions, then replan
+                                             # (the simulator evaluation executed all 50).
+                                             # Replanning every few actions makes this policy
+                                             # dither in place (docs/real_robot.md)
+  replan_period_s: 0.5                       # only used if replan_actions is removed
+  action_dt: 0.0333333                       # s. The simulator ran one action per 1/90 s at up to
+                                             # 10 rad/s, which the servos cannot follow; 1/30 s is
+                                             # that motion at a third of the speed (<= 3.33 rad/s).
+                                             # Do not set 1/90. To go slower still (first
+                                             # sessions), raise it, e.g. 0.1, and leave
+                                             # safety.max_velocity on auto (docs/real_robot.md)
+  max_frame_age_s: 0.15
+  max_state_age_s: 0.05
+
+control:
+  rate_hz: 100                               # per arm; each arm has its own bus and thread
+  interp: cubic                              # cubic (Catmull-Rom through every action) | linear
+  crossfade_s: 0.10
+  max_start_jump: 2.0                        # rad; a chunk must start this close to where the
+                                             # active chunk is heading. A plausibility check only:
+                                             # after ~45 open-loop actions a fresh plan can differ
+                                             # by a radian
+  max_first_jump: 2.0                        # rad; the same for the first chunk after a hold. The
+                                             # dataset's first action is 1.2-1.8 rad from the rest
+                                             # pose (the shoulder pans swing in)
+  min_remaining_s: 0.05
+  max_latency_s: 2.0
+  rt_priority: 0                             # SCHED_FIFO priority for the arm threads, 0 = off;
+                                             # e.g. 80 with `ulimit -r 99` or rtprio in limits.conf
+  enable_on_start: false                     # torque stays off until you type `enable`
+  verify_calibration: true                   # refuse arms whose servo registers differ from the file
+  configure_servos: true                     # lerobot follower defaults; writes only what differs
+  home_pose:                                 # rad; `home` moves here: the dataset's first frame,
+    left_shoulder_pan: -1.2363               # where every training episode starts. Start `go` here
+    left_shoulder_lift: -1.7135
+    left_elbow_flex: 1.4979
+    left_wrist_flex: 1.0534
+    left_wrist_roll: -0.085
+    left_gripper: -0.01176
+    right_shoulder_pan: 1.2363
+    right_shoulder_lift: -1.7135
+    right_elbow_flex: 1.4979
+    right_wrist_flex: 1.0534
+    right_wrist_roll: -0.085
+    right_gripper: -0.01176
+  home_speed: 0.5                            # rad/s
+
+safety:
+  max_velocity: auto                         # rad/s; auto = 0.111 rad per action_dt, the sim's
+  max_velocity_gripper: auto                 # largest step per action: 3.33 rad/s at 1/30 s, 1.11
+                                             # at 0.1 s. In training the arms chased the action at
+                                             # exactly this rate
+  out_slew_margin: 1.15                      # output-stage slew = max_velocity * this, a second
+                                             # line of defence
+  max_lead_rad: 0.5                          # goal may lead the measured position by at most this
+  max_lead_loaded_rad: 0.15                  # ... and by at most this while |load| >= load_soft_pct
+  max_lead_loaded_rad_gripper: 0.25
+  load_soft_pct: 60
+  load_soft_pct_gripper: 40
+  load_hard_pct: 90                          # hold both arms if sustained for load_hard_s
+  load_hard_pct_gripper: null                # a gripper squeezing cloth at its limit is not a fault
+  load_hard_s: 0.30
+  tracking_error_rad: 0.6                    # hold if command and measured position stay this far
+  tracking_s: 0.5                            # apart for tracking_s
+  temp_warn_c: 55
+  temp_hold_c: 62
+  temp_torque_off_c: 68                      # null = hold only (the servo's own cutoff is 70 C)
+  voltage_min: 6.0                           # match your servos: 12 V e.g. 10.5..13.5,
+  voltage_max: 14.0                          # 7.4 V e.g. 6.0..8.6
+  voltage_s: 0.2
+  bus_fail_ticks: 20                         # hold after 0.2 s of incomplete reads at 100 Hz
+
+servo:                                       # lerobot SO-101 follower defaults
+  p_coefficient: 16
+  i_coefficient: 0
+  d_coefficient: 32
+  acceleration: 254
+  maximum_acceleration: 254
+  gripper_max_torque_limit: 500
+  gripper_protection_current: 250
+  gripper_overload_torque: 25
+  torque_limit: null                         # SRAM Torque_Limit 0..1000, arm joints; null = leave
+  gripper_torque_limit: null

@@ -20,6 +20,10 @@ desktop = ["torch>=2.9"]  # x86 with an NVIDIA driver >= 580, torch from pytorch
 export = ["transformers>=4.50,<5"]  # the tokenizer, for `export`
 trt = ["onnx>=1.17"]  # the ONNX export for `build-trt`; TensorRT comes from JetPack or pip
 dev = ["pytest>=8", "ruff>=0.17"]
+viz = ["rerun-sdk>=0.38,<0.39"]  # `run --rerun`; the viewing machine needs the same version
+
+[project.scripts]
+so101-smolvla-edge = "so101_smolvla_edge.cli:main"
 
 [build-system]
 requires = ["hatchling"]
