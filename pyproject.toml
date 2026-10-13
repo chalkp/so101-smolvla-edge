@@ -1,7 +1,7 @@
 [project]
 name = "so101-smolvla-edge"
 version = "0.1.0"
-description = "SmolVLA inference on Jetson Orin and desktop GPUs, and fail-safe bimanual SO-101 control"
+description = "SmolVLA inference on Jetson Orin, desktop GPUs and Intel NPUs, and fail-safe bimanual SO-101 control"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -17,6 +17,8 @@ dependencies = [
 jp7 = ["torch>=2.14"]  # JetPack 7 (CUDA 13, Python 3.12), torch from pytorch.org cu132
 jp6 = ["torch==2.11.0; python_version == '3.10'", "nvidia-cudss-cu12"]  # JetPack 6, jetson-ai-lab
 desktop = ["torch>=2.9"]  # x86 with an NVIDIA driver >= 580, torch from pytorch.org cu130
+npu = ["torch>=2.6", "openvino>=2026.2"]  # Intel Core Ultra; torch only builds the graphs
+openvino = ["openvino>=2026.2"]  # OpenVINO's CPU plugin next to CUDA torch, to cross-check graphs
 export = ["transformers>=4.50,<5"]  # the tokenizer, for `export`
 trt = ["onnx>=1.17"]  # the ONNX export for `build-trt`; TensorRT comes from JetPack or pip
 dev = ["pytest>=8", "ruff>=0.17"]
@@ -35,7 +37,7 @@ packages = ["src/so101_smolvla_edge"]
 [tool.uv]
 # fail the lock on any machine if a Jetson dependency has no aarch64 wheel
 required-environments = ["sys_platform == 'linux' and platform_machine == 'aarch64'"]
-conflicts = [[{ extra = "jp7" }, { extra = "jp6" }, { extra = "desktop" }]]
+conflicts = [[{ extra = "jp7" }, { extra = "jp6" }, { extra = "desktop" }, { extra = "npu" }]]
 # nvidia-cudss-cu12 pulls server-ARM cuBLAS and NVRTC wheels, which shadow JetPack's libraries on a
 # Jetson and make cuBLAS fail with CUBLAS_STATUS_ALLOC_FAILED, so they are never installed
 override-dependencies = [
@@ -48,6 +50,7 @@ torch = [
     { index = "pytorch-cu132", extra = "jp7" },
     { index = "jetson-jp6", extra = "jp6" },
     { index = "pytorch-cu130", extra = "desktop" },
+    { index = "pytorch-cpu", extra = "npu" },
 ]
 
 [[tool.uv.index]]
@@ -63,6 +66,11 @@ explicit = true
 [[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.pytest.ini_options]
