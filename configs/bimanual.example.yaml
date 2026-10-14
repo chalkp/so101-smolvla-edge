@@ -82,6 +82,15 @@ log_every: 1                                 # write every n-th control tick to 
                                              # (1 is ~120 KB/s for two arms)
 
 inference:
+  backend: torch                             # torch: the CUDA engine (Jetson, desktop GPU); the
+                                             # keys from dtype to trt_precision apply to it only.
+                                             # openvino: Intel NPU or CPU, after
+                                             # `so101-smolvla-edge build-ov <bundle>`
+  ov_device: NPU                             # openvino only: one device for every stage, or
+                                             # "vision,prefix,denoise" (e.g. NPU,CPU,CPU)
+  ov_turbo: true                             # openvino only: NPU_TURBO. Without it an NPU left
+                                             # idle between chunks starts each one slowly, but
+                                             # spends less energy on it
   dtype: bf16                                # fp32 is ~2.5x slower; check either with
                                              # `so101-smolvla-edge verify`
   residual: fp32                             # fp32: reference numerics; compute: all bf16, a
