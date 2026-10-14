@@ -5,3 +5,5 @@ arms:
   left: {port: sim, calibration: sim}
   right: {port: sim, calibration: sim}
 log_dir: ~/so101-logs/sim
+# On an Intel NPU (after `so101-smolvla-edge build-ov <bundle>`), instead of the CUDA engine:
+# inference: {backend: openvino}

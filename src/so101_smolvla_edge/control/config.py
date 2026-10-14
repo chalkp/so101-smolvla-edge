@@ -49,6 +49,10 @@ class ArmConfig:
 
 @dataclass
 class InferenceConfig:
+    backend: str = "torch"  # torch: the CUDA engine, set up by the options down to trt_precision
+    # | openvino: Intel NPU / CPU, after so101-smolvla-edge build-ov BUNDLE
+    ov_device: str = "NPU"  # openvino: one device for every stage, or "vision,prefix,denoise"
+    ov_turbo: bool = True  # openvino: NPU_TURBO; an NPU left idle between chunks is slow without it
     dtype: str = "bf16"  # bf16 | fp16 | fp32
     residual: str = "fp32"  # fp32 (as the reference) | compute
     cuda_graph: bool = True

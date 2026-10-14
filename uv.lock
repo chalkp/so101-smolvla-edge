@@ -2,11 +2,36 @@ version = 1
 revision = 5
 requires-python = ">=3.10"
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
-    "python_full_version < '3.11'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 required-markers = [
     "platform_machine == 'aarch64' and sys_platform == 'linux'",
@@ -15,6 +40,7 @@ conflicts = [[
     { package = "so101-smolvla-edge", extra = "desktop" },
     { package = "so101-smolvla-edge", extra = "jp6" },
     { package = "so101-smolvla-edge", extra = "jp7" },
+    { package = "so101-smolvla-edge", extra = "npu" },
 ]]
 
 [manifest]
@@ -411,7 +437,12 @@ name = "filelock"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/4c/58/6fd434bec86eff7c38a3168454cb132b762b2bea9b3ac094101a2f7bc32a/filelock-4.1.0.tar.gz", hash = "sha256:ad7f724afef953e731b1cc39bcd3a09166d72ed7fcdf29e6e88b1c3235c6715d", size = 561277, upload-time = "2026-10-09T19:57:20.34Z" }
 wheels = [
@@ -423,10 +454,30 @@ name = "filelock"
 version = "4.2.4"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d8/28/3893324bcadf8f89b1616637468d766af3f625008c0735bf704fdfa86617/filelock-4.2.4.tar.gz", hash = "sha256:c6d8663535e1650ee430507b4ffbac7b464dd64b7647ea0112a9f406499d163d", size = 652444, upload-time = "2026-10-19T01:57:51.001Z" }
 wheels = [
@@ -509,7 +560,7 @@ name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "markupsafe", marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp6') or extra == 'extra-18-so101-smolvla-edge-desktop' or extra == 'extra-18-so101-smolvla-edge-jp7'" },
+    { name = "markupsafe" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d", size = 245115, upload-time = "2025-03-05T20:05:02.478Z" }
 wheels = [
@@ -725,7 +776,11 @@ name = "networkx"
 version = "3.4.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fd/1d/06475e1cd5264c0b870ea2cc6fdb3e37177c1e565c43f56ff17a10e3937f/networkx-3.4.2.tar.gz", hash = "sha256:307c3669428c5362aab27c8a1260aa8f47c4e91d3891f48be0141738d8d053e1", size = 2151368, upload-time = "2024-10-21T12:39:38.695Z" }
 wheels = [
@@ -737,7 +792,10 @@ name = "networkx"
 version = "3.6.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version == '3.11.*'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6a/51/63fe664f3908c97be9d2e4f1158eb633317598cfa6e1fc14af5383f17512/networkx-3.6.1.tar.gz", hash = "sha256:26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509", size = 2517025, upload-time = "2025-12-08T17:02:39.908Z" }
 wheels = [
@@ -749,9 +807,18 @@ name = "networkx"
 version = "3.7"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/dc/76/3af777226b63a5e64a6b36b1ec5855c14e2b94a37096d4760e595fc43511/networkx-3.7.tar.gz", hash = "sha256:fd77a511bd90f39f3d016351345b52cf5319b813bdca01de3f755d3cca62e96a", size = 1866482, upload-time = "2026-09-21T16:45:16.974Z" }
 wheels = [
@@ -763,7 +830,12 @@ name = "numpy"
 version = "2.2.6"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/21/7d2a95e4bba9dc13d043ee156a356c0a8f0c6309dff6b21b4d71a073b8a8/numpy-2.2.6.tar.gz", hash = "sha256:e29554e2bef54a90aa5cc07da6ce955accb83f21ab5de01a62c8478897b264fd", size = 20276440, upload-time = "2025-05-17T22:38:04.611Z" }
 wheels = [
@@ -828,7 +900,12 @@ name = "numpy"
 version = "2.4.6"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version == '3.11.*'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d0/ad/fed0499ce6a338d2a03ebae59cd15093910c8875328855781952abf6c2fe/numpy-2.4.6.tar.gz", hash = "sha256:f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda", size = 20735807, upload-time = "2026-05-18T23:37:14.07Z" }
 wheels = [
@@ -910,9 +987,24 @@ name = "numpy"
 version = "2.5.4"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/95/b0/c7453d0b6e2073c3264468b106ee1563750cecc910965e67357e3698c83e/numpy-2.5.4.tar.gz", hash = "sha256:9a94cf751c9ad8ebaa835bcd3d40dacf8534ad086b88c38029b65123c7999d2a", size = 20866315, upload-time = "2026-10-10T20:05:31.422Z" }
 wheels = [
@@ -995,7 +1087,7 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "nvidia-cuda-nvrtc", version = "13.0.88", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-desktop' or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "nvidia-cuda-nvrtc", version = "13.0.88", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-desktop' or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/a1/0bd24ee8c8d03adac032fd2909426a00c88f8c57961b1277ded97f91119f/nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:b7a210458267ac818974c53038fbec2e969d5c99f305ab15c72522fa9f001dd5", size = 542848918, upload-time = "2026-04-08T18:46:22.985Z" },
@@ -1015,7 +1107,7 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "nvidia-cuda-nvrtc", version = "13.2.86", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-jp7' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6')" },
+    { name = "nvidia-cuda-nvrtc", version = "13.2.86", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-jp7' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/a0/5cd9d4b08a8320f7ca150ee0d66c97e98092922e338336cb4b62da7500c3/nvidia_cublas-13.4.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:4eb1472bf92b741e7cf24da7978dde251b58ddec2092d9f6a04f3623eb4e9a15", size = 513048232, upload-time = "2026-07-16T09:45:07.751Z" },
@@ -1153,8 +1245,8 @@ name = "nvidia-cudnn-cu13"
 version = "9.24.0.43"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas", version = "13.1.1.3", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-desktop' or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "nvidia-cublas", version = "13.4.1.3", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-jp7' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6')" },
+    { name = "nvidia-cublas", version = "13.1.1.3", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-desktop' or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "nvidia-cublas", version = "13.4.1.3", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'extra-18-so101-smolvla-edge-jp7' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ca/30/7c257e3d5cb4fecb147b93895c66e29c93f8e76d74b45bb418ff0587c4ec/nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:a6812a554a1ff0413e9c52b84c26c050380649ab9615f9c16bded368ce9f421f", size = 650976863, upload-time = "2026-07-02T16:23:39.248Z" },
@@ -1167,7 +1259,7 @@ name = "nvidia-cudss-cu12"
 version = "0.8.0.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cuda-toolkit", version = "12.9.2.0", source = { registry = "https://pypi.org/simple" }, extra = ["cublas"], marker = "extra == 'extra-18-so101-smolvla-edge-jp6' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "cuda-toolkit", version = "12.9.2.0", source = { registry = "https://pypi.org/simple" }, extra = ["cublas"], marker = "extra == 'extra-18-so101-smolvla-edge-jp6' or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a3/d6/5797df31603d2f9142aeb263b7a72353a234c838ba0bf216cb34fb17d4d9/nvidia_cudss_cu12-0.8.0.10-py3-none-manylinux_2_17_aarch64.whl", hash = "sha256:a806e6e7dbeba6fce64018e76e6deee19471b44ce4daec018c18d42bb08493a5", size = 108978938, upload-time = "2026-06-02T00:01:02.854Z" },
@@ -1499,6 +1591,52 @@ wheels = [
 ]
 
 [[package]]
+name = "openvino"
+version = "2026.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "openvino-telemetry" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3e/d2/745eb23be29c24a0f57635019c3f0879f8d08eff43d41560c585fd677bd0/openvino-2026.4.1-22982-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:6c6ad38aefc3b0a7d1dbc7189c2be92bb876853f4681e1b1b9fbe1a382d5876f", size = 33293649, upload-time = "2026-10-01T09:58:16.529Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/57/b2d53cfb56be03449a95df18a76fe443ae94b16b3ae15128ca65e08dcd91/openvino-2026.4.1-22982-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:47dcccbab40a23aed1dc4af7c43a9c813cc61f684d66498e1627d407d5f2770b", size = 59122954, upload-time = "2026-10-01T09:58:20.659Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/07/16113c677dfc391dd606b8b537fa1198fee0277a9b0d3c4c4394677399fd/openvino-2026.4.1-22982-cp310-cp310-manylinux_2_35_aarch64.whl", hash = "sha256:c9fed6c278b3f0314a53b4366fe8811bd784f24a60335b318dff1e3ae3bbb5c0", size = 30339241, upload-time = "2026-10-01T09:58:24.193Z" },
+    { url = "https://files.pythonhosted.org/packages/71/e1/0be67369907ced8a68129e5edfe89a6bedbb4e78fc7aa93ff49157905edb/openvino-2026.4.1-22982-cp310-cp310-win_amd64.whl", hash = "sha256:45ad6947f404049cb54807638ad35a67c66c0c90d1e89ee6cc45f92021cb6c45", size = 84952044, upload-time = "2026-10-01T09:58:28.676Z" },
+    { url = "https://files.pythonhosted.org/packages/39/42/0faa4f36f07768af0128c531459d4d604c5354c75bb1f2bc0eaad0f8d274/openvino-2026.4.1-22982-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:d3740853691ae4a9003bc3417a4625d848e2cc3251af4b815c59199b38be252a", size = 33302114, upload-time = "2026-10-01T09:58:31.973Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/12/dcfe1316704aa47767352001b7351df90b71592bc1ee76a9852bf9850219/openvino-2026.4.1-22982-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:2d22b1da03f7caf74df30e9f6417d0ab2f637e4a38e08e1dcd294d2c37407aaf", size = 59130756, upload-time = "2026-10-01T09:58:35.747Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/82/704955b0134d2be51dd8d476dc60c55c08107d5a404b1a90bd3d8b7227a5/openvino-2026.4.1-22982-cp311-cp311-manylinux_2_35_aarch64.whl", hash = "sha256:bea1eb3733c34ef331adc945da0ccda5937865031139073663be84c517ffda22", size = 30348540, upload-time = "2026-10-01T09:58:39.205Z" },
+    { url = "https://files.pythonhosted.org/packages/da/86/4bbb3566e7b8385b6727164a75ad75f3b3a08026d1760a7bf0c55bd50a10/openvino-2026.4.1-22982-cp311-cp311-win_amd64.whl", hash = "sha256:bfddae6d6d3ad240157b946f180c33d0ddfaaae7487995d929a4e6b4bc12b283", size = 84956545, upload-time = "2026-10-01T09:58:44.223Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/4e/865889882a3be23beaf9808f93069c05e2eb8c8ff4e9b913568fc0383ce4/openvino-2026.4.1-22982-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:726ac547b8474a5e7b145bc1ae5a8bb6fbcbb60b79bd9a611c67eec2c74b7a5f", size = 33341733, upload-time = "2026-10-01T09:58:47.515Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/3a/2a173ac1ad749ff0b041788eefc1ade0d410231fedfc43f77474f3b806cc/openvino-2026.4.1-22982-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:6b4375c17ddcac83a5180349e2e2bb811185c261066e2a920659892d58ef0e3b", size = 59144434, upload-time = "2026-10-01T09:58:51.34Z" },
+    { url = "https://files.pythonhosted.org/packages/b2/d7/390c0ec5b81b6e089b012aaba6a2dc14f3ac7c52bfd78d10f074e72616ab/openvino-2026.4.1-22982-cp312-cp312-manylinux_2_35_aarch64.whl", hash = "sha256:82efccb2f9f1bdc7e5a1996e05a3b719ebff9232dd54b44150d6d2e983a86b7d", size = 30332437, upload-time = "2026-10-01T09:58:54.385Z" },
+    { url = "https://files.pythonhosted.org/packages/d0/44/66a61b7cfccea1dfa20e95a04b4157f07a0e4dc3f7e894b22a92abb8822b/openvino-2026.4.1-22982-cp312-cp312-win_amd64.whl", hash = "sha256:4e04316abff1b99e29b8cbd38deaef9bde4739eba216d982d4b3981e456ecd87", size = 84964415, upload-time = "2026-10-01T09:58:59.18Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/75/66fc1f74a4c9cdc7bf2d4773dd7e199589ec87884d10b9e58b4eca1e3a50/openvino-2026.4.1-22982-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:60496e3153122913c8a2fa69d86b3a77ccc4e2469db87d76eb8acb49a5d22d63", size = 33341974, upload-time = "2026-10-01T09:59:03.149Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/8b/d2fb2611cd8160cb4c0e5401b9d87312961d77891eade431381e396a8d83/openvino-2026.4.1-22982-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:a9b637846c579d7b81b17b6585e0c7b1947574e8d13cf83d7307ce50cd2c352e", size = 59142703, upload-time = "2026-10-01T09:59:06.972Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/2b/e3b9cb3870cfeb0f9b2ad0f9adba18e06e0168e0c72ed14a11adb66982e1/openvino-2026.4.1-22982-cp313-cp313-manylinux_2_35_aarch64.whl", hash = "sha256:fc45339ff7d539de76e6d7b04135c120504c797cfc8c2a0dde3d2d616b30c758", size = 30333747, upload-time = "2026-10-01T09:59:10.03Z" },
+    { url = "https://files.pythonhosted.org/packages/35/e2/917952cd8d21351d10bf0ce694421de92a2b14a6269f0ba13d2504fcf6a9/openvino-2026.4.1-22982-cp313-cp313-win_amd64.whl", hash = "sha256:37c270c99d6de23439965e97cb5106389d3c8985f3b8bb90909a6ea0270db3f2", size = 84964362, upload-time = "2026-10-01T09:59:15.467Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/0d/113b7dad0f3a2a87b394898bfafa810c50a97ebfa10e91ab03a9bbce11d6/openvino-2026.4.1-22982-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:f57d1cc75c77c18b2be8ab628d8e0a8e01f4be44f521823b6fba7ede31d708d3", size = 33317735, upload-time = "2026-10-01T09:59:20.236Z" },
+    { url = "https://files.pythonhosted.org/packages/77/cf/830aff97404d73b8ada3ba3f02a626089a384299322cb94b52c37eaebd18/openvino-2026.4.1-22982-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:3631dd889dccf3d5087775948590a6609a662f90c24a9cf85bb4dfa0cdd7fd2f", size = 59145072, upload-time = "2026-10-01T09:59:24.04Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/97/6fe7443b66179413c21cca9e36267e22711398debdd3ba4ad59fa2f933b3/openvino-2026.4.1-22982-cp314-cp314-manylinux_2_35_aarch64.whl", hash = "sha256:b70a01f6961bf8fe4b647b14fb122be4d30ece02292a9831f9241a64be089676", size = 30342100, upload-time = "2026-10-01T09:59:27.175Z" },
+    { url = "https://files.pythonhosted.org/packages/56/bc/5ebb236e5c10155d7693ea282308b9dbfe4142c5f3350a77203ab859684b/openvino-2026.4.1-22982-cp314-cp314-win_amd64.whl", hash = "sha256:96d5ecb8cca4d61a3eee754c9e477702509cf782eb45596c653a00ddb2176d96", size = 84966232, upload-time = "2026-10-01T09:59:32.323Z" },
+    { url = "https://files.pythonhosted.org/packages/14/b0/a0e6a1b0938ed87107a1db91d27c0f57168e20b066a3681adc430c51cd46/openvino-2026.4.1-22982-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:24c73d3c61a8b71c09bf512a294d37ff8ea6e4b0c65c1b136bb842bbbd6c9c31", size = 33553140, upload-time = "2026-10-01T09:59:35.894Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/81/f437957dbb73002e38a3c25cfcb0eddf3faa3b328bae586836d40ff13cc2/openvino-2026.4.1-22982-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:645e8788370b1037cc21d19078f2f235478292e23938b00ab4fe0d2614a5f7d0", size = 59189953, upload-time = "2026-10-01T09:59:39.877Z" },
+    { url = "https://files.pythonhosted.org/packages/da/d1/3904a8913f717d92ef383e7f105425944012ed73c816d85f790dc2fb5923/openvino-2026.4.1-22982-cp314-cp314t-manylinux_2_35_aarch64.whl", hash = "sha256:6c5672d6cc0fba4e22fd8d1352ffd7e395f6135da741e002bfad7a0344c183f2", size = 27452183, upload-time = "2026-10-01T09:59:43.135Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/b4/0f24c785d915269fa2fc087cc2242b1216f6ed2584598ba0f8bada2d53e9/openvino-2026.4.1-22982-cp314-cp314t-win_amd64.whl", hash = "sha256:c383422d3e7e457441ec88911da0b16ed5132f55b8c9fb21411749d3eff90a60", size = 85132406, upload-time = "2026-10-01T09:59:47.575Z" },
+]
+
+[[package]]
+name = "openvino-telemetry"
+version = "2025.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/71/8a/89d82f1a9d913fb266c2e6dc2f6030935db24b7152963a8db6c4f039787f/openvino_telemetry-2025.2.0.tar.gz", hash = "sha256:8bf8127218e51e99547bf38b8fb85a8b31c9bf96e6f3a82eb0b3b6a34155977c", size = 18894, upload-time = "2025-07-07T10:29:51.159Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3b/ac/5ab0ca0aa269ad3c73f7bfc3801b10e5f56f75a31bf68c1ae8bd51cf70a4/openvino_telemetry-2025.2.0-py3-none-any.whl", hash = "sha256:bcb667e83a44f202ecf4cfa49281715c6d7e21499daec04ff853b7f964833599", size = 25227, upload-time = "2025-07-07T10:29:50.189Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1512,7 +1650,12 @@ name = "pillow"
 version = "12.3.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1c/3d/bb7fca845737cf9d7dbde16ed1843984665ff2e0a518f5db43e77ec540b9/pillow-12.3.0.tar.gz", hash = "sha256:3b8182a766685eaa002637e28b4ec8d6b18819a0c71f579bf0dbaa5830297cce", size = 47025035, upload-time = "2026-07-01T11:56:38.965Z" }
 wheels = [
@@ -1609,10 +1752,30 @@ name = "pillow"
 version = "13.0.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ce/a4/9cc30690a394a8305e8be4c9036aa16d0dfddadd09079860b582f562496d/pillow-13.0.0.tar.gz", hash = "sha256:cdcd1ba258178f7356d74170c9a81ba4eab6a5d55748bc402a5a2a6fe6be3510", size = 47058631, upload-time = "2026-10-16T22:18:09.718Z" }
 wheels = [
@@ -1757,7 +1920,12 @@ name = "pyarrow"
 version = "25.0.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version < '3.11'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/3d/e3/27f57f80141379d60defe6703eb50a707325706f07fedfd1312c7a751995/pyarrow-25.0.1.tar.gz", hash = "sha256:9150a83248bfed9813ea3c3af74c3856c1984d444aa28e58bf7733b9750ddf6a", size = 1201653, upload-time = "2026-08-10T12:40:53.904Z" }
 wheels = [
@@ -1810,10 +1978,30 @@ name = "pyarrow"
 version = "26.0.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ec/34/17c34cb38e5d940e38f0f0d9fdfa0e8a506676409ea9b85aff7e3079f831/pyarrow-26.0.0.tar.gz", hash = "sha256:0cccd36e00ea3afeb52ded61f2721ce71f604853d70c45365c58324eb773d6ae", size = 1239433, upload-time = "2026-10-09T08:26:25.315Z" }
 wheels = [
@@ -2209,11 +2397,26 @@ name = "setuptools"
 version = "84.2.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
-    "python_full_version < '3.11'",
+    "python_full_version >= '3.14' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform != 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and sys_platform == 'darwin' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra != 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version >= '3.14' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.13.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.12.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
+    "python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop' and extra != 'extra-18-so101-smolvla-edge-jp6' and extra != 'extra-18-so101-smolvla-edge-jp7' and extra != 'extra-18-so101-smolvla-edge-npu'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/70/b3/c19426f783614d625699a4b247faf628ea9ab1db228674491767b417f9e1/setuptools-84.2.1.tar.gz", hash = "sha256:3ff8b3b5492a0aa66960f4419365a86b84e013070d4313e4d4a6894f5d64d6bc", size = 1230289, upload-time = "2026-10-20T19:01:37.742Z" }
 wheels = [
@@ -2252,6 +2455,14 @@ jp6 = [
 jp7 = [
     { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
 ]
+npu = [
+    { name = "openvino" },
+    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+]
+openvino = [
+    { name = "openvino" },
+]
 trt = [
     { name = "onnx" },
 ]
@@ -2265,6 +2476,8 @@ requires-dist = [
     { name = "nvidia-cudss-cu12", marker = "extra == 'jp6'" },
     { name = "onnx", marker = "extra == 'trt'", specifier = ">=1.17" },
     { name = "opencv-python-headless", specifier = ">=4.8" },
+    { name = "openvino", marker = "extra == 'npu'", specifier = ">=2026.2" },
+    { name = "openvino", marker = "extra == 'openvino'", specifier = ">=2026.2" },
     { name = "pyserial", specifier = ">=3.5" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pyyaml", specifier = ">=6.0" },
@@ -2274,16 +2487,17 @@ requires-dist = [
     { name = "torch", marker = "python_full_version == '3.10.*' and extra == 'jp6'", specifier = "==2.11.0", index = "https://pypi.jetson-ai-lab.io/jp6/cu126/+simple", conflict = { package = "so101-smolvla-edge", extra = "jp6" } },
     { name = "torch", marker = "extra == 'desktop'", specifier = ">=2.9", index = "https://download.pytorch.org/whl/cu130", conflict = { package = "so101-smolvla-edge", extra = "desktop" } },
     { name = "torch", marker = "extra == 'jp7'", specifier = ">=2.14", index = "https://download.pytorch.org/whl/cu132", conflict = { package = "so101-smolvla-edge", extra = "jp7" } },
+    { name = "torch", marker = "extra == 'npu'", specifier = ">=2.6", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "so101-smolvla-edge", extra = "npu" } },
     { name = "transformers", marker = "extra == 'export'", specifier = ">=4.50,<5" },
 ]
-provides-extras = ["jp7", "jp6", "desktop", "export", "trt", "dev", "viz"]
+provides-extras = ["jp7", "jp6", "desktop", "npu", "openvino", "export", "trt", "dev", "viz"]
 
 [[package]]
 name = "sympy"
 version = "1.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mpmath", marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp6') or extra == 'extra-18-so101-smolvla-edge-desktop' or extra == 'extra-18-so101-smolvla-edge-jp7'" },
+    { name = "mpmath" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/83/d3/803453b36afefb7c2bb238361cd4ae6125a569b4db67cd9e79846ba2d68c/sympy-1.14.0.tar.gz", hash = "sha256:d3d3fe8df1e5a0b42f0e7bdf50541697dbe7d23746e894990c030e2b05e72517", size = 7793921, upload-time = "2025-04-27T18:05:01.611Z" }
 wheels = [
@@ -2400,16 +2614,112 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "fsspec", marker = "python_full_version < '3.11'" },
-    { name = "jinja2", marker = "python_full_version < '3.11'" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "sympy", marker = "python_full_version < '3.11'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "fsspec" },
+    { name = "jinja2" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "setuptools", version = "81.0.0", source = { registry = "https://pypi.org/simple" } },
+    { name = "sympy" },
+    { name = "typing-extensions" },
 ]
 wheels = [
     { url = "https://pypi.jetson-ai-lab.io/jp6/cu126/+f/46b/b8b13f844b211/torch-2.11.0-cp310-cp310-linux_aarch64.whl", hash = "sha256:46bb8b13f844b2111f6f41abc703d01075a7185e0c587cb002e957ede2b8c8a3" },
+]
+
+[[package]]
+name = "torch"
+version = "2.14.1"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'darwin'",
+    "python_full_version == '3.13.*' and sys_platform == 'darwin'",
+    "python_full_version == '3.12.*' and sys_platform == 'darwin'",
+    "python_full_version == '3.11.*' and sys_platform == 'darwin'",
+    "python_full_version < '3.11' and sys_platform == 'darwin'",
+]
+dependencies = [
+    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "fsspec", marker = "sys_platform == 'darwin'" },
+    { name = "jinja2", marker = "sys_platform == 'darwin'" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "setuptools", version = "84.2.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform == 'darwin'" },
+    { name = "sympy", marker = "sys_platform == 'darwin'" },
+    { name = "typing-extensions", marker = "sys_platform == 'darwin'" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:e3ac0a862f1e81a23bd2b9ff979c189a2154e731c06d4c530bfbf2642ff01ddf", upload-time = "2026-09-30T19:50:20Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:7b0670b545f1b732a3219966e6704b27398a32a764bc7cce065e40b142dcf8a1", upload-time = "2026-09-30T19:50:26Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:9cf3082d25560efb1eef921871595227c0cf305abb7761ca45b6b988ef6cdd45", upload-time = "2026-09-30T19:50:32Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:82762c7527079f1e17a771684362ed51400e3bc72942df30217e40f27c6816d7", upload-time = "2026-09-30T19:50:39Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:17b32fd68abe9429d936c643579e24465e7174a06c168bbfcc01395a881bc8af", upload-time = "2026-09-30T19:50:45Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp314-cp314t-macosx_14_0_arm64.whl", hash = "sha256:6fe25964e53113a8a1f5640be1103a982a426c07f8907fba48fcca1be1112202", upload-time = "2026-09-30T19:50:51Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp315-cp315-macosx_14_0_arm64.whl", hash = "sha256:729992e6b581de722989012547b7767ef8ac019bd060e34805f06a52ff9a120e", upload-time = "2026-09-30T19:50:56Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp315-cp315t-macosx_14_0_arm64.whl", hash = "sha256:3e4d7679866c4cd68258ccda7c51bcda150797eda095813f26fe63c07934cc21", upload-time = "2026-09-30T19:51:02Z" },
+]
+
+[[package]]
+name = "torch"
+version = "2.14.1+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform != 'darwin'",
+    "python_full_version == '3.13.*' and sys_platform != 'darwin'",
+    "python_full_version == '3.12.*' and sys_platform != 'darwin'",
+    "python_full_version == '3.11.*' and sys_platform != 'darwin'",
+    "python_full_version < '3.11' and sys_platform != 'darwin'",
+]
+dependencies = [
+    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "fsspec", marker = "sys_platform != 'darwin'" },
+    { name = "jinja2", marker = "sys_platform != 'darwin'" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "setuptools", version = "84.2.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'darwin'" },
+    { name = "sympy", marker = "sys_platform != 'darwin'" },
+    { name = "typing-extensions", marker = "sys_platform != 'darwin'" },
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp310-cp310-linux_s390x.whl", hash = "sha256:24b279ee181df14dc353f3e3f0e3f088d88a38175989dadb5645c0194830d4de", upload-time = "2026-09-30T19:46:33Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:b869fe9358c90dd82d02db89aef89729df93a89a48b7c3e21a7719abf55586b3", upload-time = "2026-09-30T19:46:40Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:4ce2a6ae7d302bba56ef7c5c92d9f752728896cfe2626a7f3e5293f879e36650", upload-time = "2026-09-30T19:46:47Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp310-cp310-win_amd64.whl", hash = "sha256:bda7043ec45539b1b61538af468e19854b72ac6be8d6fde2f51dfd0c91721568", upload-time = "2026-09-30T19:46:55Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp311-cp311-linux_s390x.whl", hash = "sha256:cccd0a609fe3f83ab2ff651b627d5bd68c7fb33ee77a994b31c18b7c9a6f9a52", upload-time = "2026-09-30T19:47:01Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:36a03a3f87ec875ca39c8e29eccbaf0fc704605f78a3f7f179f157048c3c395e", upload-time = "2026-09-30T19:47:07Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:5e38154c8896d426a5df58bf2276b603e82184dfae4f54d77dbb212f36e34f37", upload-time = "2026-09-30T19:47:14Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp311-cp311-win_amd64.whl", hash = "sha256:d14b0c8a66345b7ba43adfa86fc20d89087a0a92e440004755d49d2468ddc6e0", upload-time = "2026-09-30T19:47:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp311-cp311-win_arm64.whl", hash = "sha256:100df7e44af5c973606cfef571a14b36b0acfd165d6bbc7aabe3edac95c9ccbd", upload-time = "2026-09-30T19:47:25Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-linux_s390x.whl", hash = "sha256:6b06a7f6275c5fdecaf1dbf5546f0820b024a97785575bb99e3d9930d83cd86b", upload-time = "2026-09-30T19:47:30Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:2af649994b36dffc627175c3f306d9e513a309b58d4619ac7107577613336454", upload-time = "2026-09-30T19:47:36Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:5a6363570c753812540a05eb82380e329469cbe668643e88111414c12627711f", upload-time = "2026-09-30T19:47:44Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-win_amd64.whl", hash = "sha256:c52adc3bd526ff7fc5bdcc58fc4a76e6214d09951b646ffe5256ebd7ba60cef1", upload-time = "2026-09-30T19:47:50Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-win_arm64.whl", hash = "sha256:2f8162c6b265eaf2b0bdd6bef20e96cece430f308e1477a32d0aef51e472124c", upload-time = "2026-09-30T19:47:55Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-linux_s390x.whl", hash = "sha256:4b323c71a5ac184485c87d694842157b1eb217c425ad69761dafd379d1590521", upload-time = "2026-09-30T19:47:59Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:783a3dec10d272e40ed3f1a05ec228400300d3229b8f7521a9327645fae88646", upload-time = "2026-09-30T19:48:06Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:331fa474e26e428e2e6af1143b2fdab19cee492d7d21897b8899ce1c14755662", upload-time = "2026-09-30T19:48:15Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-win_amd64.whl", hash = "sha256:4eec5a4fadd7a18f9c75b97fdb374fbb579ce4b1604bf66eeb14dc2201d54def", upload-time = "2026-09-30T19:48:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-win_arm64.whl", hash = "sha256:a46884e8b38cbdf5af8d4fdd39223a5fa97491419c3417c93f9b3e28749fa356", upload-time = "2026-09-30T19:48:27Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314-linux_s390x.whl", hash = "sha256:a7a580e3d92467516c9247a22bc805ae4f79c7b1b9a2052f92849f34e89720f5", upload-time = "2026-09-30T19:48:32Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:f56cd23a3bf003bfbed3da0645ba09b3ccc66c0a2f2ac726a9b98f34e0e4926f", upload-time = "2026-09-30T19:48:39Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:35103e180214793207f95d7e12e100ecba3ace6f5fb37e1fcefbb07e096ed180", upload-time = "2026-09-30T19:48:48Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314-win_amd64.whl", hash = "sha256:a93db7947d53caab62c2436205a60ddf9c3150c2e09eb9b24610c1c3f4cbaf99", upload-time = "2026-09-30T19:48:56Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314t-linux_s390x.whl", hash = "sha256:f67ee1fe9c9f7c6ad3785d150bc3cecda442a5880a6d40816e13fee475d97dd8", upload-time = "2026-09-30T19:49:02Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:2547c9f32f8fd9c8fced83119269d85519b123d4e8c87eba71660fe3a6996336", upload-time = "2026-09-30T19:49:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:7d2c35e915793f3ae82e8ee4041a960140bcd0bd35f3ec6eb06e1f1f37a89dba", upload-time = "2026-09-30T19:49:18Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp314-cp314t-win_amd64.whl", hash = "sha256:5c0d1ef51127c9c65ec6394226b82ef1a5f3cd0ab8ffb10f48cc5c08aa72a5cf", upload-time = "2026-09-30T19:49:27Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315-manylinux_2_28_aarch64.whl", hash = "sha256:88634fad89f7b953acd011bad0d5c131d269aa71a7de6e0ef2344e3a2c95fabc", upload-time = "2026-09-30T19:49:34Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315-manylinux_2_28_x86_64.whl", hash = "sha256:94edee897fbd15a73f91aa38e22e2d2b7b60ac3acf6e8afc6b8dad89229c810c", upload-time = "2026-09-30T19:49:42Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315-win_amd64.whl", hash = "sha256:e799161f94d97485857ec82424e40a83d7648ab02c03e3d6e71c7838a4d7b89e", upload-time = "2026-09-30T19:49:50Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:930d724490955b822c0b005499128279e54876a318b51fdb9b9da35e0230cc0f", upload-time = "2026-09-30T19:49:57Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:2948f065d848178a0402791baf87493b7ebf067dae48a8e04c498d6668e94895", upload-time = "2026-09-30T19:50:06Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp315-cp315t-win_amd64.whl", hash = "sha256:192745b92c9ac392298e73de950cd02d8a7886117923073d890625622d343ede", upload-time = "2026-09-30T19:50:14Z" },
 ]
 
 [[package]]
@@ -2425,14 +2735,14 @@ resolution-markers = [
 ]
 dependencies = [
     { name = "cuda-bindings", marker = "python_full_version < '3.15' and sys_platform == 'linux'" },
-    { name = "cuda-toolkit", version = "13.0.3.0", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "cuda-toolkit", version = "13.0.3.0", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
     { name = "fsspec" },
     { name = "jinja2" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra == 'extra-18-so101-smolvla-edge-desktop') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
     { name = "nvidia-cudnn-cu13", marker = "sys_platform == 'linux'" },
     { name = "nvidia-cusparselt-cu13", marker = "sys_platform == 'linux'" },
     { name = "nvidia-nccl-cu13", marker = "sys_platform == 'linux'" },
@@ -2482,14 +2792,14 @@ resolution-markers = [
 ]
 dependencies = [
     { name = "cuda-bindings", marker = "python_full_version < '3.15' and sys_platform == 'linux'" },
-    { name = "cuda-toolkit", version = "13.2.2", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "cuda-toolkit", version = "13.2.2", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
     { name = "fsspec" },
     { name = "jinja2" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
-    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7')" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version == '3.11.*' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
+    { name = "networkx", version = "3.7", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
     { name = "nvidia-cudnn-cu13", marker = "sys_platform == 'linux'" },
     { name = "nvidia-cusparselt-cu13", marker = "sys_platform == 'linux'" },
     { name = "nvidia-nccl-cu13", marker = "sys_platform == 'linux'" },

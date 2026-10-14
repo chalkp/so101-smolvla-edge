@@ -19,6 +19,15 @@ import numpy as np
 
 def _engine(args, bundle: str | None = None):
     """Build the inference engine the command-line options describe."""
+    if args.backend == "openvino":
+        from .model.ov_engine import OVEngine
+
+        try:
+            return OVEngine(
+                bundle or args.bundle, device=args.ov_device, warmup=2, turbo=not args.ov_no_turbo
+            )
+        except ValueError as exc:  # a malformed --ov-device
+            raise SystemExit(str(exc)) from exc
     from .model.engine import Engine
 
     return Engine(
@@ -66,7 +75,9 @@ def cmd_verify(args) -> int:
     """Run the bundle's golden observations and compare with its reference actions.
 
     Exit 1 when the error against the float32 reference (or the served one, if that is all the
-    bundle has) exceeds --tol. The default tolerance is tight for fp32 and loose for bf16 and fp16.
+    bundle has) exceeds --tol. The default tolerance is tight for torch fp32, loose for bf16, fp16
+    and the NPU, and in between for the OpenVINO CPU plugin, which computes in float32 but from
+    float16-rounded weights.
     """
     g, cams = _golden(args.bundle)
     eng = _engine(args)
@@ -76,12 +87,19 @@ def cmd_verify(args) -> int:
             for i in range(len(g["state"]))
         ]
     )
-    tol = args.tol if args.tol is not None else (1e-4 if args.dtype == "fp32" else 3e-2)
-    compile_mode = "autotune" if args.autotune else args.compile
-    print(
-        f"engine {args.dtype} residual={args.residual} graph={not args.no_graph} "
-        f"compile={compile_mode} vision={args.vision}  ({len(outs)} observations)"
-    )
+    if args.backend == "openvino":
+        exact = all(d == "CPU" for d in eng.devices.values()) and not eng.int8
+        tol = args.tol if args.tol is not None else (2e-3 if exact else 3e-2)
+        devices = " ".join(f"{k}={v}" for k, v in eng.devices.items())
+        int8 = f"  int8 weights: {', '.join(eng.int8)}" if eng.int8 else ""
+        print(f"engine openvino {devices}{int8}  ({len(outs)} observations)")
+    else:
+        tol = args.tol if args.tol is not None else (1e-4 if args.dtype == "fp32" else 3e-2)
+        compile_mode = "autotune" if args.autotune else args.compile
+        print(
+            f"engine {args.dtype} residual={args.residual} graph={not args.no_graph} "
+            f"compile={compile_mode} vision={args.vision}  ({len(outs)} observations)"
+        )
     ok = True
     src = json.loads((Path(args.bundle) / "meta.json").read_text()).get("golden_source")
     if src:
@@ -106,20 +124,33 @@ def cmd_bench(args) -> int:
     g, cams = _golden(args.bundle)
     imgs = {c: g[f"img.{c}"][0] for c in cams}
     st = g["state"][0]
+    ov = args.backend == "openvino"
     settle = 5  # untimed runs before the timed ones
-    # the CUDA library preload in .model has to run before torch is imported
-    from . import model  # noqa: F401, I001
-    import torch
+    if ov:
+        from .model import ov_engine
 
-    cuda = _torch_device(args.device) == "cuda"
-    gpu = torch.cuda.get_device_name() if cuda else "CPU"
-    print(
-        f"torch {torch.__version__}  {gpu}  dtype={args.dtype} residual={args.residual} "
-        f"graph={not args.no_graph} compile={args.compile} vision={args.vision}"
-    )
+        core = ov_engine.core()
+        import openvino  # after core(), which points Level Zero at the NPU driver first
+
+        names = "; ".join(
+            f"{d}: {core.get_property(d, 'FULL_DEVICE_NAME')}" for d in core.available_devices
+        )
+        print(f"openvino {openvino.__version__}  {names}  device={args.ov_device}")
+        busy = ov_engine.npu_busy_us()
+    else:
+        # the CUDA library preload in .model has to run before torch is imported
+        from . import model  # noqa: F401, I001
+        import torch
+
+        cuda = _torch_device(args.device) == "cuda"
+        gpu = torch.cuda.get_device_name() if cuda else "CPU"
+        print(
+            f"torch {torch.__version__}  {gpu}  dtype={args.dtype} residual={args.residual} "
+            f"graph={not args.no_graph} compile={args.compile} vision={args.vision}"
+        )
     t0 = time.perf_counter()
     eng = _engine(args)
-    print(f"load + warmup + capture: {time.perf_counter() - t0:.1f} s")
+    print(f"load + warmup{'' if ov else ' + capture'}: {time.perf_counter() - t0:.1f} s")
     for _ in range(settle):
         eng.infer(imgs, st)
     eng.timing.history.clear()
@@ -132,6 +163,15 @@ def cmd_bench(args) -> int:
         f"per chunk (images in -> 50x{eng.action_dim} actions out): p50 {s['p50_ms']:.1f} ms  "
         f"p90 {s['p90_ms']:.1f}  p99 {s['p99_ms']:.1f}  max {s['max_ms']:.1f}  ({args.n} runs)"
     )
+    if ov:
+        if busy is not None:  # the driver's own count of time the NPU spent executing
+            runs = args.n + settle + 2  # timed, settling and the engine's warmup
+            npu_ms = (ov_engine.npu_busy_us() - busy) / runs / 1e3
+            print(f"NPU busy {npu_ms:.1f} ms per chunk (intel_vpu counter)")
+        if args.profile:
+            prof = eng.profile(imgs, st)
+            print("sections (wall ms): " + "  ".join(f"{k} {v:.1f}" for k, v in prof.items()))
+        return 0
     if args.profile:
         if not cuda:
             print("--profile times CUDA events; not available on the CPU")
@@ -154,6 +194,26 @@ def _act_clip(bundle: str, path: str | None) -> dict[str, float]:
         )
     clip = json.loads(path.read_text())
     return clip.get("so101_act_clip", clip.get("clip", clip))
+
+
+def cmd_build_ov(args) -> int:
+    """Build the OpenVINO graphs for a bundle, with int8 weights where --int8 asks for them."""
+    from . import model  # noqa: F401
+    from .model import ov_graph
+
+    t0 = time.perf_counter()
+    int8 = ov_graph.STAGES if args.int8 == "all" else tuple(x for x in args.int8.split(",") if x)
+    try:
+        out = ov_graph.build_ir(args.bundle, fp16=not args.fp32, int8=int8)
+    except ValueError as exc:  # a stage name --int8 does not know
+        raise SystemExit(str(exc)) from exc
+    size = sum(f.stat().st_size for f in out.glob("*.bin")) / 2**20
+    print(
+        f"built {out} in {time.perf_counter() - t0:.0f} s ({size:.0f} MiB); the first run on a "
+        "device compiles it for that device (about half a minute on an NPU) and caches the result "
+        f"in {out / 'cache'}"
+    )
+    return 0
 
 
 def cmd_build_trt(args) -> int:
@@ -201,7 +261,7 @@ def _arch_supported(cap: tuple[int, int], archs: list[str]) -> bool:
 
 
 def cmd_doctor(args) -> int:
-    """Check torch and CUDA, Triton, serial ports, cameras and group membership."""
+    """Check torch and CUDA, Triton, OpenVINO, serial ports, cameras and group membership."""
     import glob
     import grp
     import platform
@@ -235,6 +295,39 @@ def cmd_doctor(args) -> int:
         print(f"triton {triton.__version__} (torch.compile available)")
     except Exception:  # noqa: BLE001
         print("triton: not installed (no torch.compile; the CUDA graph does not need it)")
+    npu = Path("/dev/accel/accel0")
+    try:
+        from ._npu_libs import find_stack
+        from .model import ov_engine
+
+        core = ov_engine.core()
+        import openvino  # after core(), which points Level Zero at the NPU driver first
+
+        devs = core.available_devices
+        print(f"openvino {openvino.__version__}  devices {devs}")
+        for d in devs:
+            extra = ""
+            if d == "NPU":
+                driver = core.get_property(d, "NPU_DRIVER_VERSION")
+                caps = core.get_property(d, "OPTIMIZATION_CAPABILITIES")
+                extra = f"  driver {driver}, capabilities {caps}"
+            print(f"  {d}: {core.get_property(d, 'FULL_DEVICE_NAME')}{extra}")
+        if "NPU" not in devs and npu.exists():
+            stack = find_stack()
+            if stack:
+                why = f"the driver at {stack} did not load"
+            else:
+                why = "no user-space driver; scripts/setup_intel_npu.sh unpacks one without root"
+            if not os.access(npu, os.R_OK | os.W_OK):
+                why += f"; and {npu} is not accessible (group 'render')"
+            print(f"  !! this machine has an NPU ({npu}) but OpenVINO does not see it: {why}")
+    except SystemExit:  # no openvino, which only matters where there is an NPU to use it on
+        if npu.exists():
+            print(
+                "openvino: not installed, and this machine has an NPU: scripts/setup_intel_npu.sh"
+            )
+    except Exception as exc:  # noqa: BLE001
+        print(f"openvino: {type(exc).__name__}: {exc}")
     for mod in ("cv2", "serial", "safetensors", "yaml"):
         try:
             m = __import__(mod)
@@ -665,17 +758,24 @@ def cmd_run(args) -> int:
             cold = "" if n > 500 else "; empty or new, so this start compiles for minutes"
             print(f"compiled kernels: {cache} ({n} files){cold}", flush=True)
         t0 = time.monotonic()
-        from .model.engine import Engine
+        if ic.backend == "openvino":
+            from .model.ov_engine import OVEngine
 
-        policy = Engine(
-            cfg.bundle,
-            dtype=ic.dtype,
-            residual=ic.residual,
-            cuda_graph=ic.cuda_graph,
-            compile=ic.compile,
-            vision=ic.vision,
-            trt_precision=ic.trt_precision,
-        )
+            policy = OVEngine(cfg.bundle, device=ic.ov_device, turbo=ic.ov_turbo)
+        elif ic.backend == "torch":
+            from .model.engine import Engine
+
+            policy = Engine(
+                cfg.bundle,
+                dtype=ic.dtype,
+                residual=ic.residual,
+                cuda_graph=ic.cuda_graph,
+                compile=ic.compile,
+                vision=ic.vision,
+                trt_precision=ic.trt_precision,
+            )
+        else:
+            raise SystemExit(f"inference.backend must be 'torch' or 'openvino', not {ic.backend!r}")
         print(f"policy loaded in {time.monotonic() - t0:.1f} s")
     arms = _arms(cfg, sims)
     for a in arms.values():
@@ -769,6 +869,24 @@ def main(argv: list[str] | None = None) -> int:
     def engine_opts(p):
         p.add_argument("bundle")
         p.add_argument(
+            "--backend",
+            default="torch",
+            choices=["torch", "openvino"],
+            help="openvino: Intel NPU or CPU, after build-ov. The --ov-* options are openvino's, "
+            "the rest torch's",
+        )
+        p.add_argument(
+            "--ov-device",
+            default="NPU",
+            help="one device for every stage, or one each for vision,prefix,denoise "
+            "(e.g. NPU,CPU,CPU)",
+        )
+        p.add_argument(
+            "--ov-no-turbo",
+            action="store_true",
+            help="leave NPU_TURBO off, to see what an idle NPU costs (with bench --period)",
+        )
+        p.add_argument(
             "--device",
             default="auto",
             help="cuda or cpu; auto picks cuda when there is one (on a CPU use --dtype fp32)",
@@ -826,7 +944,7 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_export)
     p = sub.add_parser("verify", help="compare the engine with the bundle's reference actions")
     engine_opts(p)
-    p.add_argument("--tol", type=float, help="max error in rad (default by dtype)")
+    p.add_argument("--tol", type=float, help="max error in rad (default by dtype and backend)")
     p.set_defaults(fn=cmd_verify)
     p = sub.add_parser("bench", help="measure inference latency")
     engine_opts(p)
@@ -859,7 +977,23 @@ def main(argv: list[str] | None = None) -> int:
         "--reexport", action="store_true", help="re-export the ONNX graph even if present"
     )
     p.set_defaults(fn=cmd_build_trt)
-    p = sub.add_parser("doctor", help="check torch, CUDA, Triton, ports and cameras")
+    p = sub.add_parser("build-ov", help="build the OpenVINO graphs (Intel NPU or CPU) for a bundle")
+    p.add_argument("bundle")
+    p.add_argument(
+        "--fp32",
+        action="store_true",
+        help="store float32 weights (twice the size; only the CPU plugin can tell the difference)",
+    )
+    p.add_argument(
+        "--int8",
+        default="",
+        metavar="STAGES",
+        help="int8 weights (a scale per output channel, float16 activations) for these "
+        "comma-separated stages: vision, prefix, denoise, or all. Faster on an NPU, denoise most. "
+        "It rounds the weights, so verify and evaluate it like any other precision",
+    )
+    p.set_defaults(fn=cmd_build_ov)
+    p = sub.add_parser("doctor", help="check torch, CUDA, Triton, OpenVINO, ports and cameras")
     p.set_defaults(fn=cmd_doctor)
     p = sub.add_parser("scan", help="list the servos on one bus")
     p.add_argument("--port", required=True, help="serial port, e.g. /dev/ttyACM0")
