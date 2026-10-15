@@ -22,7 +22,21 @@ jobs:
       - run: uvx ruff@0.17.1 format --check .
 
   test:
-    # Hosted runners have no GPU: the CUDA tests skip, the rest run on the CPU.
+    # Hosted runners have no GPU or NPU. The npu environment is CPU torch plus OpenVINO, which runs
+    # everything but the CUDA and Triton tests (those skip); the OpenVINO graphs run on its CPU plugin.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+          environments: npu
+          locked: true
+          cache: true
+      - run: pixi run -e npu test
+
+  uv:
+    # The fallback install, and the one the Jetson uses: same tests from uv.lock, then the wheel.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -30,6 +44,6 @@ jobs:
         with:
           enable-cache: true
       - run: uv lock --check
-      - run: uv sync --locked --extra desktop --extra dev
+      - run: uv sync --locked --extra npu --extra dev
       - run: uv run pytest
       - run: uv build
