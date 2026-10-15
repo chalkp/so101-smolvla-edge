@@ -5,4 +5,8 @@ __pycache__/
 bundles/
 *.safetensors
 *.npz
+profiles/
 .pixi/
+*.nsys-rep
+*.sqlite
+*.qdstrm
