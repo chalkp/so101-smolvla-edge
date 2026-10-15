@@ -5,3 +5,4 @@ __pycache__/
 bundles/
 *.safetensors
 *.npz
+.pixi/

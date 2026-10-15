@@ -82,3 +82,44 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
+
+# pixi runs the x86 machines (desktop GPU, Intel NPU laptop). The Jetson keeps uv
+# (scripts/setup_jetson.sh): its torch comes from JetPack indexes and TensorRT from the system.
+# pixi ignores [tool.uv.sources], so each torch flavour names its index again here.
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+requires-pixi = ">=0.50"
+
+[tool.pixi.dependencies]
+python = "3.12.*"
+
+[tool.pixi.pypi-dependencies]
+so101-smolvla-edge = { path = ".", editable = true }
+
+[tool.pixi.feature.desktop.pypi-dependencies]
+# cu130 has the torch and Triton the Orin's jp7 runs, so both compile the kernels with one Triton
+torch = { version = ">=2.9", index = "https://download.pytorch.org/whl/cu130" }
+
+[tool.pixi.feature.trt.pypi-dependencies]
+# < 11: TensorRT 11 builds strongly typed networks only, and trt_vision builds a weakly typed one
+# from the float32 ONNX graph, as TensorRT 10 on the Orin does
+tensorrt-cu13 = ">=10.13,<11"
+
+[tool.pixi.feature.npu.pypi-dependencies]
+torch = { version = ">=2.9", index = "https://download.pytorch.org/whl/cpu" }
+
+[tool.pixi.environments]
+# default: CUDA torch, and OpenVINO's CPU plugin to check the OpenVINO graphs on the same machine
+default = { features = ["desktop", "trt", "openvino", "dev"], solve-group = "desktop" }
+npu = { features = ["npu", "dev"] }
+export = { features = ["desktop", "export", "dev"], solve-group = "desktop" }
+
+[tool.pixi.tasks]
+test = { cmd = "pytest", description = "unit, simulated-hardware and backend tests" }
+lint = { cmd = "ruff check . && ruff format --check .", description = "what CI checks" }
+doctor = { cmd = "so101-smolvla-edge doctor", description = "check torch, CUDA, Triton, OpenVINO, ports" }
+verify = { cmd = "so101-smolvla-edge verify", description = "the engine against the bundle's reference actions" }
+bench = { cmd = "so101-smolvla-edge bench", description = "latency per chunk" }
+build-ov = { cmd = "so101-smolvla-edge build-ov", description = "OpenVINO graphs for a bundle" }
+sim = { cmd = "so101-smolvla-edge run configs/sim.yaml --sim --commands enable,go,wait5 --bundle", description = "the robot process on simulated servos: pixi run sim BUNDLE" }
