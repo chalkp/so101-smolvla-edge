@@ -109,9 +109,17 @@ tensorrt-cu13 = ">=10.13,<11"
 [tool.pixi.feature.npu.pypi-dependencies]
 torch = { version = ">=2.9", index = "https://download.pytorch.org/whl/cpu" }
 
+[tool.pixi.feature.profile.dependencies]
+# Ubuntu's nsight-systems 2023.4 silently drops cuBLAS kernels under a 595 driver
+nsight-systems = ">=2026.1"
+
+[tool.pixi.feature.profile.tasks]
+nsys-profile = { cmd = "python scripts/nsys_profile.py", description = "Nsight Systems trace and per-stage report in profiles/<label>/" }
+
 [tool.pixi.environments]
 # default: CUDA torch, and OpenVINO's CPU plugin to check the OpenVINO graphs on the same machine
 default = { features = ["desktop", "trt", "openvino", "dev"], solve-group = "desktop" }
+profile = { features = ["desktop", "trt", "openvino", "dev", "profile"], solve-group = "desktop" }
 npu = { features = ["npu", "dev"] }
 export = { features = ["desktop", "export", "dev"], solve-group = "desktop" }
 
