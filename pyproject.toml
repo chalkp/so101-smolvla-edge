@@ -1,6 +1,6 @@
 [project]
 name = "so101-smolvla-edge"
-version = "0.1.0"
+version = "0.2.0"
 description = "SmolVLA inference on Jetson Orin, desktop GPUs and Intel NPUs, and fail-safe bimanual SO-101 control"
 readme = "README.md"
 requires-python = ">=3.10"
