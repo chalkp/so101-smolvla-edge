@@ -1,22 +1,24 @@
 # so101-smolvla-edge
 
-SmolVLA inference on edge accelerators and fail-safe control for a bimanual SO-101, in one package:
-the CUDA engine that runs on a Jetson Orin (and desktop GPUs), one bundle format, one CLI
-(`so101-smolvla-edge`) and the robot process.
+SmolVLA inference on edge accelerators and fail-safe control for a bimanual SO-101, in one package.
+The CUDA engine (Jetson Orin, desktop GPUs) and the OpenVINO engine (Intel NPU) share one model
+definition, one bundle format, one CLI (`so101-smolvla-edge`) and one robot process.
 
 - **CUDA engine**: the whole action chunk as one CUDA graph, the vision tower in TensorRT, and
   torch.compile with autotuned GEMMs for the prefix pass.
+- **OpenVINO engine**: the same policy as three static graphs on the NPU of a Core Ultra laptop.
 - **Robot process**: Feetech STS3215 bus driver, calibration, chunk executor, leader-arm teleop,
   episode recording and a safety layer that reads load, current, temperature and voltage every tick.
 
 Nothing from `transformers` or `lerobot` runs on the robot: torch, numpy, safetensors, pyserial,
-OpenCV and PyYAML.
+OpenCV and PyYAML (openvino instead of torch on an NPU).
 
 ## Results
 
-**Jetson Orin Nano Super 8 GB** (JetPack 7.2.1, MAXN SUPER, GPU clock pinned), trained bundle.
-Images in, 50 x 12 actions out, p50 over 200 chunks; error is the largest action difference from
+Images in, 50 x 12 actions out, p50 over 200 chunks. Error is the largest action difference from
 the training code's float32 output on the bundle's two reference observations (`verify`).
+
+**Jetson Orin Nano Super 8 GB** (JetPack 7.2.1, MAXN SUPER, GPU clock pinned), trained bundle:
 
 | engine | per chunk | prefix | denoise | max error |
 |---|---|---|---|---|
@@ -24,14 +26,45 @@ the training code's float32 output on the bundle's two reference observations (`
 | + TensorRT vision, int8 | 135.0 ms | 20.7 ms | 54.5 ms | |
 | **+ `--autotune`** | **110.2 ms** | **12.0 ms** | **39.1 ms** | 7.8e-3 rad |
 
-The int8 vision was evaluated on LeHome against bf16 and came out level. The first autotuned start
-compiles for minutes; keep `TORCHINDUCTOR_CACHE_DIR` (or `inference.kernel_cache`) on disk.
+The int8 vision was evaluated on LeHome against bf16 and came out level.
+
+**Intel Core Ultra 7 355 NPU** (OpenVINO 2026.4, NPU driver 1.38), trained bundle, one chunk
+every 0.5 s like the robot:
+
+| graphs | per chunk | vision | max error |
+|---|---|---|---|
+| **float16** | **138.4 ms** | **81.3 ms** | 2.4e-3 rad |
+| int8 denoising weights (`build-ov --int8 denoise`) | 130.8 ms | 81.1 ms | 9.2e-3 rad |
+
+The int8 denoising weights have not been evaluated on LeHome. Vision is the largest stage: int8
+activations there would cut it further but need a calibration this repository does not carry yet.
+
+**RTX 3080** (12 GB, 70 SMs), stand-in bundle (pretrained `smolvla_base` weights, so the error is
+against this package's float32 engine):
+
+| engine | per chunk | prefix | denoise | max error |
+|---|---|---|---|---|
+| CUDA graph | 36.1 ms | 3.2 ms | 16.9 ms | 3.4e-3 rad |
+| + TensorRT vision (bf16) | 32.6 ms | 3.3 ms | 17.0 ms | |
 
 ## Install
 
+[pixi](https://pixi.sh) manages the x86 machines; the Jetson keeps [uv](https://docs.astral.sh/uv/),
+whose lock pins the JetPack torch wheels. Both read the same `pyproject.toml`.
+
+| machine | command | environment |
+|---|---|---|
+| desktop with an NVIDIA GPU (driver >= 580) | `pixi install` | torch 2.14 cu130, Triton, TensorRT, OpenVINO CPU, pytest, ruff |
+| Intel Core Ultra laptop (NPU) | `scripts/setup_intel_npu.sh` | `npu`: CPU torch to build the graphs, OpenVINO, Intel's NPU driver unpacked without root |
+| Jetson Orin | `scripts/setup_jetson.sh` | uv venv: `jp7` (JetPack 7, torch cu132) or `jp6` |
+| profiling on the desktop | `pixi install -e profile` | `default` plus Nsight Systems 2026 |
+| bundle export | `pixi install -e export` | `default` plus transformers |
+| anything else | `uv sync --extra desktop --extra dev` | the uv fallback (`--extra npu` for an NPU) |
+
+On a Jetson, pin the GPU clock before a robot run, or every chunk after an idle gap starts at the
+lowest clock:
+
 ```bash
-scripts/setup_jetson.sh                       # Jetson Orin: uv venv, jp7 (JetPack 7) or jp6
-uv sync --extra desktop --extra dev           # x86 with an NVIDIA GPU (driver >= 580)
 sudo nvpmodel -m 2 && sudo jetson_clocks      # 2 = MAXN_SUPER on an Orin Nano (check nvpmodel -q)
 sudo usermod -aG dialout,video $USER          # serial and cameras, then log in again
 ```
@@ -47,6 +80,11 @@ so101-smolvla-edge build-trt bundles/nosig --precision bf16 int8   # once per de
 so101-smolvla-edge verify bundles/nosig --vision trt --trt-precision int8
 so101-smolvla-edge bench bundles/nosig --vision trt --trt-precision int8 --autotune --profile
 
+# Intel NPU instead
+so101-smolvla-edge build-ov bundles/nosig
+so101-smolvla-edge verify bundles/nosig --backend openvino
+so101-smolvla-edge bench bundles/nosig --backend openvino --profile --period 0.5
+
 # hardware (docs/real_robot.md walks through it)
 so101-smolvla-edge scan --port /dev/serial/by-path/...
 cp configs/bimanual.example.yaml robot.yaml                       # ports, calibration, cameras
@@ -54,8 +92,10 @@ so101-smolvla-edge monitor robot.yaml                             # read-only te
 so101-smolvla-edge run robot.yaml                                 # enable, go, take, pause, resume, home, off
 
 # the whole robot process against simulated servos and the bundle's reference images
-so101-smolvla-edge run configs/sim.yaml --sim --commands enable,go,wait5 --bundle bundles/nosig
+pixi run sim bundles/nosig
 ```
+
+The pixi tasks forward their arguments: `pixi run verify bundles/nosig --vision trt`.
 
 ## How the CUDA engine works
 
@@ -71,6 +111,26 @@ prefix, the action expert) checked against the training code by the bundle's ref
 - **TensorRT vision** (`vision: trt`), bf16 or W8A8 int8, enqueued inside the same graph.
 - **torch.compile** per stage; `autotune` also autotunes the prefix GEMMs. The denoising GEMMs get
   slower when autotuned, so they keep the default mode.
+
+To see where a GPU's time goes:
+
+```bash
+pixi run -e profile nsys-profile bundles/nosig --label mine -- --vision trt
+```
+
+`nsys-profile` attributes every kernel of a graph replay to its stage and writes
+`profiles/<label>/summary.md`. On a Jetson use JetPack's newest nsys
+(`/opt/nvidia/nsight-systems/<version>/bin`).
+
+## How the OpenVINO engine works
+
+`model/ov_graph.py` builds three static graphs (vision for one camera, the prefix, one denoising
+step) and `model/ov_engine.py` runs them without torch. The NPU computes in float16 or int8 and
+takes static shapes only, so the graphs are written for its compiler: MLPs as 1x1 convolutions on a
+tall token grid, the prefix mask as a rank-one product, grouped-query attention folded into the
+sequence axis, the Euler update on the host in float32. `NPU_TURBO` keeps the NPU from clocking
+down between chunks (`inference.ov_turbo`). Each stage can go to its own device
+(`--ov-device NPU,CPU,CPU`), never AUTO or HETERO, so a stage the NPU cannot compile fails loudly.
 
 ## Control
 
@@ -108,6 +168,12 @@ temperature, voltage), `events.jsonl` and `chunks.jsonl`.
 
 ## Tests
 
-`uv run pytest`: the servo protocol, the bus over a pty against simulated servos, calibration, the
-executor, every safety fault path and end-to-end runner runs. `SO101_BUNDLE=<bundle>` adds parity
-against the bundle's reference actions (CUDA). CI runs ruff and the tests on every push.
+`pixi run test` runs everything this machine can: the engine's graph replay against eager
+execution (bit-identical), the OpenVINO graphs against `SmolVLA` on the CPU plugin, the servo protocol, the bus over a pty
+against simulated servos, calibration, the executor, every safety fault path, and end-to-end
+runner runs. `SO101_BUNDLE=<bundle>` adds parity against the bundle's reference actions (CUDA)
+and, on a machine with one, the NPU. `pixi run lint` is the check CI runs.
+
+CI (`.github/workflows/ci.yml`) runs ruff, the tests in the CPU `npu` environment with pixi, and
+the uv fallback from `uv.lock` with a wheel build. Hosted runners have no GPU or NPU, so the CUDA
+and NPU tests run on the devices.
