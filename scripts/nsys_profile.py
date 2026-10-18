@@ -41,8 +41,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Kernel classes of the report, first match wins, most specific first. "triton" is code Inductor
-# generated.
+# Kernel classes of the report, first match wins, most specific first. This package's own Triton
+# kernels (so101_*) land in the class of what they do; "triton" is code Inductor generated.
 CLASSES = [
     ("memcpy", r"^\[mem"),
     ("attention", r"flash|fmha|attention|attn|mha|softmax"),

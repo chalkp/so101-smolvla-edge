@@ -10,7 +10,7 @@ Normally started by scripts/nsys_profile.py, which also reads the trace back per
 Loading, compiling, warm-up and graph capture stay outside the cudaProfilerStart/Stop range.
 
     --mode stages   what the robot runs, cut at the stage boundaries: the engine's vision, prefix
-                    and denoise stages (compiled or TensorRT as configured), each captured
+                    and denoise stages (compiled, TensorRT or Triton as configured), each captured
                     as its own CUDA graph and replayed inside an NVTX range `stage:<name>`, then
                     the engine's per-chunk graph inside `stage:chunk`. Node tracing tags every
                     kernel of a replay with its cudaGraphLaunch, which gives each kernel exactly
@@ -47,6 +47,7 @@ def main() -> None:
         choices=["", "default", "autotune"],
         help="torch.compile mode, off by default",
     )
+    ap.add_argument("--kernels", default="auto", choices=["auto", "torch", "triton"])
     a = ap.parse_args()
 
     # preloads the CUDA libraries a Jetson torch needs, so it has to come before torch
@@ -70,6 +71,7 @@ def main() -> None:
         warmup=3,
         vision=a.vision,
         trt_precision=a.trt_precision,
+        kernels=a.kernels,
         compile={"": False, "default": True, "autotune": "autotune"}[a.compile],
     )
     for _ in range(5):
