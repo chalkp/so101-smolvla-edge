@@ -40,6 +40,7 @@ def _engine(args, bundle: str | None = None):
         warmup=2,
         vision=args.vision,
         trt_precision=args.trt_precision,
+        kernels=args.kernels,
     )
 
 
@@ -98,7 +99,8 @@ def cmd_verify(args) -> int:
         compile_mode = "autotune" if args.autotune else args.compile
         print(
             f"engine {args.dtype} residual={args.residual} graph={not args.no_graph} "
-            f"compile={compile_mode} vision={args.vision}  ({len(outs)} observations)"
+            f"compile={compile_mode} vision={args.vision} kernels={eng.kernels}"
+            f"  ({len(outs)} observations)"
         )
     ok = True
     src = json.loads((Path(args.bundle) / "meta.json").read_text()).get("golden_source")
@@ -146,10 +148,14 @@ def cmd_bench(args) -> int:
         gpu = torch.cuda.get_device_name() if cuda else "CPU"
         print(
             f"torch {torch.__version__}  {gpu}  dtype={args.dtype} residual={args.residual} "
-            f"graph={not args.no_graph} compile={args.compile} vision={args.vision}"
+            f"graph={not args.no_graph} compile={args.compile} vision={args.vision} "
+            f"kernels={args.kernels}",
+            end="",
         )
     t0 = time.perf_counter()
     eng = _engine(args)
+    if not ov:
+        print(f" -> {eng.kernels}" if args.kernels == "auto" else "")
     print(f"load + warmup{'' if ov else ' + capture'}: {time.perf_counter() - t0:.1f} s")
     for _ in range(settle):
         eng.infer(imgs, st)
@@ -292,9 +298,9 @@ def cmd_doctor(args) -> int:
     try:
         import triton
 
-        print(f"triton {triton.__version__} (torch.compile available)")
+        print(f"triton {triton.__version__} (Triton kernels and torch.compile available)")
     except Exception:  # noqa: BLE001
-        print("triton: not installed (no torch.compile; the CUDA graph does not need it)")
+        print("triton: not installed (--kernels auto falls back to torch; no torch.compile)")
     npu = Path("/dev/accel/accel0")
     try:
         from ._npu_libs import find_stack
@@ -773,6 +779,7 @@ def cmd_run(args) -> int:
                 compile=ic.compile,
                 vision=ic.vision,
                 trt_precision=ic.trt_precision,
+                kernels=ic.kernels,
             )
         else:
             raise SystemExit(f"inference.backend must be 'torch' or 'openvino', not {ic.backend!r}")
@@ -906,7 +913,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument(
             "--compile",
             action="store_true",
-            help="torch.compile each stage (needs Triton)",
+            help="torch.compile (needs Triton); with the Triton kernels it covers vision only",
         )
         p.add_argument(
             "--autotune",
@@ -921,11 +928,19 @@ def main(argv: list[str] | None = None) -> int:
             help="vision tower in torch or as a TensorRT plan (trt: run build-trt first)",
         )
         p.add_argument(
+            "--kernels",
+            default="auto",
+            choices=["auto", "torch", "triton"],
+            help="triton: the prefix pass and the denoising loop on the Triton kernels of "
+            "so101_smolvla_edge.kernels. auto: triton on a CUDA GPU when Triton is installed "
+            "and the dtype is bf16 or fp16, torch otherwise",
+        )
+        p.add_argument(
             "--trt-precision",
             default="bf16",
             choices=["fp16", "bf16", "fp32", "int8"],
             help="precision of the TensorRT vision plan. int8 is W8A8 (build-trt --precision "
-            "int8, needs the activation clips)",
+            "int8, needs the activation clips) and the fastest choice on an Orin",
         )
 
     p = sub.add_parser("export", help="write an inference bundle from a training checkpoint")

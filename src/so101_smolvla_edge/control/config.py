@@ -59,6 +59,8 @@ class InferenceConfig:
     compile: bool | str = False  # true | "autotune"; needs Triton, falls back to eager kernels
     vision: str = "torch"  # torch | trt (build the plan first: so101-smolvla-edge build-trt BUNDLE)
     trt_precision: str = "bf16"  # bf16, the dtype the policy was trained in; fp16 is no faster
+    kernels: str = "auto"  # auto | torch | triton, for prefix and denoising; auto takes triton
+    # wherever it runs (CUDA, Triton installed, bf16/fp16)
     kernel_cache: str | None = None  # directory for torch.compile / autotune kernels; a cold cache
     # compiles for minutes at start. Unset = $TORCHINDUCTOR_CACHE_DIR, else <bundle>/inductor;
     # set it here so a start does not depend on what the shell exported.

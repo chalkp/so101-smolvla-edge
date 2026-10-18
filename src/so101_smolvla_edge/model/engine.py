@@ -8,13 +8,14 @@ unnormalisation. On a Jetson the steps are bound by kernel launches from the slo
 the whole chunk is captured once and replayed with one launch. Everything the graph touches lives
 in a fixed buffer that `infer` only writes into.
 
-Options:
+Options, each falling back with a log line where it cannot run:
 
     vision="trt"         the vision tower as a TensorRT engine (`trt_vision.py`), inside the graph
+    kernels="triton"     the prefix pass and denoising loop on the Triton kernels (`smolvla_triton`)
     compile=True         torch.compile per stage; "autotune" also autotunes the prefix GEMMs
 
-Compile falls back to the eager kernels with a log line where it cannot run, and leaves the
-TensorRT stage alone. Set TORCHINDUCTOR_CACHE_DIR, or every start compiles again.
+`kernels="auto"` takes Triton wherever it can run. Compile only applies to stages that neither
+TensorRT nor Triton already cover; set TORCHINDUCTOR_CACHE_DIR, or every start compiles again.
 """
 
 from __future__ import annotations
@@ -33,6 +34,39 @@ from .smolvla import rope_tables, sinusoidal
 from .timing import Timing
 
 log = logging.getLogger("so101_smolvla_edge.engine")
+
+
+def auto_kernels(device: torch.device, cdt: torch.dtype, spec=None) -> str:
+    """Pick the kernels for `kernels="auto"`: Triton wherever it can run (a CUDA GPU, Triton
+    installed, bf16 or fp16, a model the kernels can index), else torch."""
+    from .. import kernels as K
+
+    if device.type != "cuda" or cdt == torch.float32 or not K.available():
+        return "torch"
+    from .smolvla_triton import unsupported
+
+    return "torch" if spec is not None and unsupported(spec, cdt) else "triton"
+
+
+def _resolve_kernels(kernels: str, device: torch.device, cdt: torch.dtype, spec) -> str:
+    if kernels not in ("auto", "torch", "triton"):
+        raise ValueError(f"kernels must be 'auto', 'torch' or 'triton', not {kernels!r}")
+    if kernels == "auto":
+        return auto_kernels(device, cdt, spec)
+    if kernels == "torch":
+        return kernels
+    from .. import kernels as K
+
+    if device.type != "cuda" or not K.available():
+        why = "needs CUDA and Triton"
+    else:
+        from .smolvla_triton import unsupported  # imports triton, so only now
+
+        why = unsupported(spec, cdt)
+    if why:
+        log.warning("kernels=triton: %s; using the torch kernels", why)
+        return "torch"
+    return kernels
 
 
 def _prefix_mask(spec, device) -> torch.Tensor:
@@ -64,11 +98,13 @@ class Engine:
         warmup: int = 3,
         vision: str = "torch",
         trt_precision: str = "bf16",
+        kernels: str = "auto",
     ):
         self.device = dev = torch.device(device)
         cdt = {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}[dtype]
         self.model, self.meta, ex = load_bundle(bundle, device, cdt, residual)
         self.spec = s = self.model.spec
+        self.kernels = kernels = _resolve_kernels(kernels, dev, cdt, s)
         self.cams = self.meta["cameras"]
         self.repr = self.meta["action_repr"]
         self.state_dim = self.meta["state_dim"]
@@ -104,19 +140,25 @@ class Engine:
         time_in = temb @ self.model.p("act.time_in.w_time").T + self.model.p("act.time_in.b")
         self.time_proj = time_in[:, None, None, :]  # (n_steps, 1, 1, exp_dim)
 
-        # caches: the prefix's keys and values, and the expert's at its query heads
-        kv = (1, L, s.n_kv, s.head_dim)
+        # caches; the Triton path keeps its own at the kv heads
+        self.tp = None
+        if kernels == "triton":
+            from .smolvla_triton import TritonPath
+
+            self.tp = TritonPath(self.model, dev)
+        kv = (1, L, s.n_kv, s.head_dim) if kernels == "torch" else (0,)
         self.k_pre = [torch.zeros(kv, dtype=cdt, device=dev) for _ in range(s.n_layers)]
         self.v_pre = [torch.zeros(kv, dtype=cdt, device=dev) for _ in range(s.n_layers)]
-        self_attn = [s.is_self_attn(i) for i in range(s.n_layers)]
+        if kernels == "torch":
+            self_attn = [s.is_self_attn(i) for i in range(s.n_layers)]
 
-        def heads(rows, on):
-            shape = (1, s.n_heads, rows, s.head_dim)
-            return [torch.zeros(shape, dtype=cdt, device=dev) if x else None for x in on]
+            def heads(rows, on):
+                shape = (1, s.n_heads, rows, s.head_dim)
+                return [torch.zeros(shape, dtype=cdt, device=dev) if x else None for x in on]
 
-        cross = [not x for x in self_attn]
-        self.ks, self.vs = heads(L + H, self_attn), heads(L + H, self_attn)
-        self.kx, self.vx = heads(L, cross), heads(L, cross)
+            cross = [not x for x in self_attn]
+            self.ks, self.vs = heads(L + H, self_attn), heads(L + H, self_attn)
+            self.kx, self.vx = heads(L, cross), heads(L, cross)
 
         self.timing = Timing()
         self.trt = None
@@ -137,6 +179,8 @@ class Engine:
         self._encode = self.trt if self.trt is not None else self.model.encode_images
 
         self._stages = [self._vision, self._prefix, self._denoise]
+        if self.tp is not None:
+            self._stages = [self._vision, self._prefix_triton, self._denoise_triton]
         if compile:
             self._compile_stages(bundle, compile)
         self._fwd = self._forward
@@ -149,13 +193,13 @@ class Engine:
                     self._fwd()
 
     def _compile_stages(self, bundle, how: bool | str) -> None:
-        """Compile the stages TensorRT leaves to torch; stay eager if that fails.
+        """Compile the stages TensorRT and Triton leave to torch; stay eager if that fails.
 
         The cache goes next to the bundle unless TORCHINDUCTOR_CACHE_DIR is set, so a restart
         reuses it.
         """
         os.environ.setdefault("TORCHINDUCTOR_CACHE_DIR", str(Path(bundle).resolve() / "inductor"))
-        covered = [self.trt is not None, False, False]
+        covered = [self.trt is not None, self.tp is not None, self.tp is not None]
         try:
             compiled = [
                 f if done else self._compile(f, how)
@@ -213,11 +257,17 @@ class Engine:
         m.prefix_kv(rows, self.mask_p, self.cos_p, self.sin_p, self.k_pre, self.v_pre)
         m.expert_cache(self.k_pre, self.v_pre, self.ks, self.vs, self.kx, self.vx)
 
+    def _prefix_triton(self, img_rows: torch.Tensor) -> None:
+        self.tp.prefix(self._prefix_rows(img_rows))
+
     def step(self, k: int, x_t: torch.Tensor) -> torch.Tensor:
         """One Euler step of the denoising loop: x_t + dt * v_t."""
-        caches = (self.ks, self.vs, self.kx, self.vx)
-        rope = (self.cos_s, self.sin_s, self.cos_c, self.sin_c)
-        v = self.model.velocity(x_t, self.time_proj[k], *caches, self.mask_s, *rope)
+        if self.tp is not None:
+            v = self.tp.velocity(x_t, self.time_proj[k])
+        else:
+            caches = (self.ks, self.vs, self.kx, self.vx)
+            rope = (self.cos_s, self.sin_s, self.cos_c, self.sin_c)
+            v = self.model.velocity(x_t, self.time_proj[k], *caches, self.mask_s, *rope)
         return x_t + self.dt * v
 
     def _denoise(self) -> None:
@@ -225,6 +275,8 @@ class Engine:
         for k in range(self.spec.n_steps):
             x_t = self.step(k, x_t)
         self._finish(x_t)
+
+    _denoise_triton = _denoise  # the same loop under its own name, so compile can tell them apart
 
     def _finish(self, x_t: torch.Tensor) -> None:
         """Undo the action representation and the normalisation into the output buffer."""
