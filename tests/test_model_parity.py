@@ -20,13 +20,15 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def run(dtype, graph, residual="fp32"):
+def run(dtype, graph, residual="fp32", kernels="torch"):
     """Actions for every golden observation of the bundle, and the golden arrays."""
     from so101_smolvla_edge.model.engine import Engine
 
     g = dict(np.load(Path(BUNDLE) / "golden.npz"))
     cams = json.loads((Path(BUNDLE) / "meta.json").read_text())["cameras"]
-    eng = Engine(BUNDLE, dtype=dtype, residual=residual, cuda_graph=graph, warmup=1)
+    eng = Engine(
+        BUNDLE, dtype=dtype, residual=residual, cuda_graph=graph, warmup=1, kernels=kernels
+    )
     out = np.stack(
         [
             eng.infer({c: g[f"img.{c}"][i] for c in cams}, g["state"][i], noise=g["noise"][i])
@@ -47,5 +49,18 @@ def test_bf16_graph_is_eager_and_close(residual):
     """bf16 graph replay equals eager exactly and stays close to the fp32 reference."""
     a, g = run("bf16", graph=True, residual=residual)
     b, _ = run("bf16", graph=False, residual=residual)
+    assert np.array_equal(a, b)
+    assert np.abs(a - g["actions_fp32"]).max() < 3e-2
+
+
+@pytest.mark.parametrize("residual", ["fp32", "compute"])
+def test_triton_graph_is_eager_and_close(residual):
+    """The same with the Triton kernels: graph equals eager, close to the fp32 reference."""
+    from so101_smolvla_edge import kernels
+
+    if not kernels.available():
+        pytest.skip("needs Triton")
+    a, g = run("bf16", graph=True, residual=residual, kernels="triton")
+    b, _ = run("bf16", graph=False, residual=residual, kernels="triton")
     assert np.array_equal(a, b)
     assert np.abs(a - g["actions_fp32"]).max() < 3e-2
