@@ -131,3 +131,4 @@ verify = { cmd = "so101-smolvla-edge verify", description = "the engine against 
 bench = { cmd = "so101-smolvla-edge bench", description = "latency per chunk" }
 build-ov = { cmd = "so101-smolvla-edge build-ov", description = "OpenVINO graphs for a bundle" }
 sim = { cmd = "so101-smolvla-edge run configs/sim.yaml --sim --commands enable,go,wait5 --bundle", description = "the robot process on simulated servos: pixi run sim BUNDLE" }
+tune-gemm = { cmd = "python scripts/tune_gemm.py", description = "sweep the Triton GEMM tiles on this GPU" }
