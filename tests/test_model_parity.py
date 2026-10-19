@@ -3,6 +3,7 @@
 Needs CUDA and SO101_BUNDLE=<bundle dir>.
 """
 
+import gc
 import json
 import os
 from pathlib import Path
@@ -35,6 +36,11 @@ def run(dtype, graph, residual="fp32", kernels="torch"):
             for i in range(len(g["state"]))
         ]
     )
+    # the engine holds a reference cycle through its stage list; free it now, since an 8 GB Orin
+    # cannot hold two engines
+    del eng
+    gc.collect()
+    torch.cuda.empty_cache()
     return out, g
 
 
