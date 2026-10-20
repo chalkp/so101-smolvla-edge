@@ -56,13 +56,19 @@ class _Vision(nn.Module):
         return self.m.encode_images(px)
 
 
-def export_onnx(bundle: str | Path, out: str | Path, opset: int = 17) -> Path:
-    """Export the bundle's vision stage, in float32, as an ONNX graph at `out`."""
+def export_onnx(
+    bundle: str | Path, out: str | Path, opset: int = 17, cams: int | None = None
+) -> Path:
+    """Export the bundle's vision stage, in float32, as an ONNX graph at `out`.
+
+    `cams` is the batch the graph is traced with: every camera by default, one for the OpenVINO
+    engine, which runs a camera per inference.
+    """
     from .bundle import load_bundle
 
     model, _, _ = load_bundle(bundle, "cpu", torch.float32, "fp32")
     s = model.spec
-    px = torch.rand(s.n_cams, 3, s.image_size, s.image_size) * 2 - 1
+    px = torch.rand(cams or s.n_cams, 3, s.image_size, s.image_size) * 2 - 1
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     with torch.no_grad():

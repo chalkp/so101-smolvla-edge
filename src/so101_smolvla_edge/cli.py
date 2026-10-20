@@ -89,11 +89,12 @@ def cmd_verify(args) -> int:
         ]
     )
     if args.backend == "openvino":
-        exact = all(d == "CPU" for d in eng.devices.values()) and not eng.int8
+        exact = all(d == "CPU" for d in eng.devices.values()) and not eng.int8 and not eng.w8a8
         tol = args.tol if args.tol is not None else (2e-3 if exact else 3e-2)
         devices = " ".join(f"{k}={v}" for k, v in eng.devices.items())
         int8 = f"  int8 weights: {', '.join(eng.int8)}" if eng.int8 else ""
-        print(f"engine openvino {devices}{int8}  ({len(outs)} observations)")
+        w8a8 = f"  int8 activations: {', '.join(eng.w8a8)}" if eng.w8a8 else ""
+        print(f"engine openvino {devices}{int8}{w8a8}  ({len(outs)} observations)")
     else:
         tol = args.tol if args.tol is not None else (1e-4 if args.dtype == "fp32" else 3e-2)
         compile_mode = "autotune" if args.autotune else args.compile
@@ -203,14 +204,15 @@ def _act_clip(bundle: str, path: str | None) -> dict[str, float]:
 
 
 def cmd_build_ov(args) -> int:
-    """Build the OpenVINO graphs for a bundle, with int8 weights where --int8 asks for them."""
+    """Build the OpenVINO graphs for a bundle, int8 where --int8 and --w8a8-vision ask for it."""
     from . import model  # noqa: F401
     from .model import ov_graph
 
     t0 = time.perf_counter()
     int8 = ov_graph.STAGES if args.int8 == "all" else tuple(x for x in args.int8.split(",") if x)
+    clip = _act_clip(args.bundle, args.act_clip) if args.w8a8_vision else None
     try:
-        out = ov_graph.build_ir(args.bundle, fp16=not args.fp32, int8=int8)
+        out = ov_graph.build_ir(args.bundle, fp16=not args.fp32, int8=int8, act_clip=clip)
     except ValueError as exc:  # a stage name --int8 does not know
         raise SystemExit(str(exc)) from exc
     size = sum(f.stat().st_size for f in out.glob("*.bin")) / 2**20
@@ -1028,6 +1030,16 @@ def main(argv: list[str] | None = None) -> int:
         help="int8 weights (a scale per output channel, float16 activations) for these "
         "comma-separated stages: vision, prefix, denoise, or all. Faster on an NPU, denoise most. "
         "It rounds the weights, so verify and evaluate it like any other precision",
+    )
+    p.add_argument(
+        "--w8a8-vision",
+        action="store_true",
+        help="int8 weights and activations in the vision tower (needs the activation clips); "
+        "the same graph as build-trt --precision int8",
+    )
+    p.add_argument(
+        "--act-clip",
+        help="--w8a8-vision: activation clip json; default <bundle>/trt/act_clip.json",
     )
     p.set_defaults(fn=cmd_build_ov)
     p = sub.add_parser(
