@@ -143,10 +143,15 @@ def masks(L, H):
 
 
 @pytest.mark.parametrize("case", ["expert_self", "expert_cross", "prefix", "small"])
-def test_attention(case):
-    """attention matches the SDPA reference and repeats bit for bit."""
+@pytest.mark.parametrize("sms", [None, 8])
+def test_attention(case, sms, monkeypatch):
+    """attention matches the SDPA reference and repeats bit for bit; sms=8 uses Orin block sizes."""
+    from so101_smolvla_edge.kernels import attention as A
     from so101_smolvla_edge.kernels.attention import attention
     from so101_smolvla_edge.model.smolvla import rope_tables
+
+    if sms:
+        monkeypatch.setattr(A, "sm_count", lambda *_: sms)
 
     nq, nk, hd = (15, 5, 64) if case != "small" else (4, 2, 32)
     L, H = (200, 50) if case != "small" else (13, 7)

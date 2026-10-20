@@ -107,8 +107,36 @@ class Config:
 
 
 def pick_config(m: int, n: int, k: int, gate: bool = False, sms: int | None = None) -> Config:
-    """Tiles for an (m x k) @ (k x n) GEMM, from a scripts/tune_gemm.py sweep on an RTX 3080."""
-    return _desktop(m, n, k, gate, sms or sm_count())
+    """Tiles for an (m x k) @ (k x n) GEMM, from scripts/tune_gemm.py sweeps.
+
+    Orin-class GPUs (16 SMs or fewer) and desktop GPUs want opposite shapes at 50 rows: on 8 SMs
+    wide column tiles stream the weights fastest, on 70 SMs narrow ones are needed to fill the GPU.
+    """
+    sms = sms or sm_count()
+    if sms <= 16:
+        return _orin(m, n, k, gate)
+    return _desktop(m, n, k, gate, sms)
+
+
+def _orin(m: int, n: int, k: int, gate: bool) -> Config:
+    if m > 64:  # the prefix: all 200 rows in one tile, so every weight is read once
+        if gate:
+            return Config(256, 64, 32, 1, num_warps=8, num_stages=4)
+        if k >= 1536:
+            return Config(256, 128, 64, 1, num_warps=8, num_stages=3)
+        if n <= 512:
+            return Config(64, 64, 64, 1, num_warps=4, num_stages=3)
+        if n <= 1024:
+            return Config(128, 128, 32, 1, num_warps=4, num_stages=3)
+        return Config(256, 64, 32, 1, num_warps=4, num_stages=3)
+    bm = _rows(m)
+    if gate:
+        return Config(bm, 128, 64, 1, num_warps=8, num_stages=2)
+    if k >= 1536:
+        return Config(bm, 128, 128, 1, num_warps=8, num_stages=3)
+    if n >= 1536:
+        return Config(bm, 128, 64, 1, num_warps=8, num_stages=3)
+    return Config(bm, 128, 64, 1, num_warps=4, num_stages=3)
 
 
 def _desktop(m: int, n: int, k: int, gate: bool, sms: int) -> Config:

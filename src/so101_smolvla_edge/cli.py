@@ -266,8 +266,29 @@ def _arch_supported(cap: tuple[int, int], archs: list[str]) -> bool:
     return False
 
 
+def _jetson_clocks() -> None:
+    """Warn when the Orin's GPU clock is left to the governor.
+
+    Between chunks the GPU drops to its lowest clock, so at the robot's replan period every chunk
+    starts slow. `sudo jetson_clocks` pins it.
+    """
+    for dev in Path("/sys/devices/platform").glob("*.gpu/devfreq/*.gpu"):
+        try:
+            lo, hi = (int((dev / f).read_text()) for f in ("min_freq", "max_freq"))
+        except (OSError, ValueError):
+            continue
+        if lo < hi:
+            print(
+                f"  !! GPU clock floats {lo // 10**6}-{hi // 10**6} MHz; "
+                "run `sudo jetson_clocks` before a robot run"
+            )
+        else:
+            print(f"  GPU clock pinned at {hi // 10**6} MHz")
+        return
+
+
 def cmd_doctor(args) -> int:
-    """Check torch and CUDA, Triton, OpenVINO, serial ports, cameras and group membership."""
+    """Check torch and CUDA, Triton, OpenVINO, ports, cameras, groups and the Orin's GPU clock."""
     import glob
     import grp
     import platform
@@ -276,6 +297,7 @@ def cmd_doctor(args) -> int:
     rel = Path("/etc/nv_tegra_release")
     if rel.exists():
         print("L4T:", rel.read_text().splitlines()[0])
+        _jetson_clocks()
     try:
         # the CUDA library preload in .model has to run before torch is imported
         from .model import _preload  # noqa: F401, I001
@@ -1008,7 +1030,9 @@ def main(argv: list[str] | None = None) -> int:
         "It rounds the weights, so verify and evaluate it like any other precision",
     )
     p.set_defaults(fn=cmd_build_ov)
-    p = sub.add_parser("doctor", help="check torch, CUDA, Triton, OpenVINO, ports and cameras")
+    p = sub.add_parser(
+        "doctor", help="check torch, CUDA, Triton, OpenVINO, ports, cameras and the Orin's clock"
+    )
     p.set_defaults(fn=cmd_doctor)
     p = sub.add_parser("scan", help="list the servos on one bus")
     p.add_argument("--port", required=True, help="serial port, e.g. /dev/ttyACM0")

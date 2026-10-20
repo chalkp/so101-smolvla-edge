@@ -20,6 +20,8 @@ import torch
 import triton
 import triton.language as tl
 
+from . import sm_count
+
 
 @triton.jit
 def so101_attention(Q, K, V, OUT, COS, SIN, Lq, Lk, CK, QOFF, qk_scale, sqm, skn, svn, som,
@@ -119,6 +121,11 @@ def attention(
 
 
 def _blocks(lq: int, device: torch.device) -> tuple[int, int, int]:
-    """Query block, key block and warps, from a sweep on an RTX 3080: many small query blocks for
-    the expert's 50 queries, so 15 heads fill the SMs, and bigger ones for the prefix."""
+    """Query block, key block and warps, from sweeps on an RTX 3080 and an Orin Nano.
+
+    A desktop GPU wants many small query blocks to fill its SMs. The Orin has 8, so bigger query
+    blocks that reuse every K/V load win there (the expert's 50 queries in one block).
+    """
+    if sm_count(device.index or 0) <= 16:
+        return (64, 64, 4) if lq <= 64 else (128, 32, 2)
     return (16, 128, 4) if lq <= 64 else (64, 128, 4)
