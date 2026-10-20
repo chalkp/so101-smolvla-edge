@@ -169,7 +169,7 @@ how to check it, and how to rebuild it.
 |---|---|
 | this repo, uv venv with torch 2.14.1+cu132 and JetPack's TensorRT linked in | `~/so101-smolvla-edge`, venv in `.venv` (`scripts/setup_jetson.sh`) |
 | policy bundle, TensorRT plans (bf16, int8) and int8 calibration clips | `~/so101/bundles/nosig` (plans and clips in `trt/`) |
-| compiled-kernel cache | `/media/chalk/8f4e…/so101/inductor` (`TORCHINDUCTOR_CACHE_DIR`) |
+| compiled-kernel cache, only with `compile` on | `/media/chalk/8f4e…/so101/inductor` (`TORCHINDUCTOR_CACHE_DIR`) |
 | LeRobot 0.6.1 and the Feetech SDK, for motor setup and calibration only | `/media/chalk/8f4e…/lerobot-bench` |
 | logs and telemetry | `/media/chalk/8f4e…/telemetry`, `~/so101-logs` |
 
@@ -187,15 +187,13 @@ cd ~/so101-smolvla-edge && source .venv/bin/activate
 so101-smolvla-edge doctor                         # torch, CUDA, TensorRT, serial ports, cameras, groups
 ```
 
-`jetson-clocks.service` is enabled, but the lock has been lost before, so check `min_freq` anyway.
-Unlocked clocks show up as a slow `infer p50` (§4.3).
+`jetson-clocks.service` is enabled, but the lock has been lost before, so check `min_freq` anyway;
+`doctor` says whether the clock is pinned. Unlocked clocks show up as a slow `infer p50` (§4.3).
 
-Start-up time depends on the compiled-kernel cache. `inference.kernel_cache` in the config names its
-directory, and `run` prints it with the number of files it holds. With a warm cache the policy loads
-in about a minute; with an empty one it compiles and autotunes for about six. Keep the directory in
-the config, not in the shell: a fresh shell may not export `TORCHINDUCTOR_CACHE_DIR`, and the engine
-then falls back to an empty directory. `so101-smolvla-edge verify`, `bench` and `build-trt` still
-read the environment variable, so export it for those.
+The policy loads in a few seconds: the default Triton kernels and the TensorRT plans need no compile
+step. With `compile` on, start-up depends on the compiled-kernel cache instead: `inference.kernel_cache`
+names its directory and `run` prints how many files it holds. A warm cache loads in about a minute,
+an empty one compiles and autotunes for about six.
 
 ### 2.3 The config
 
@@ -209,7 +207,7 @@ Fill in `bundle`, the two `arms.*.port`, the two `calibration` files (§3), the 
 the voltage band, and each camera's `crop`. Use the `by-path` names: the CH343 adapters often share
 a serial number, and `ttyACM0/1` swap between boots.
 
-The example config runs `vision: trt`, `trt_precision: int8`, `compile: autotune`. For the first
+The example config runs `vision: trt`, `trt_precision: int8` and the default kernels. For the first
 real sessions set `trt_precision: bf16`: the int8 engine's activation clips were calibrated on
 simulator frames and have not been checked on real camera images. A fine-tuned bundle needs its own
 TensorRT plan and also runs bf16.
@@ -390,7 +388,7 @@ turned outward. That is a 1.2 to 1.8 rad step, taken at the slew limit. It is th
 not a fault. Keep the area in front of the arms clear before `go`.
 
 ```bash
-so101-smolvla-edge verify ~/so101/bundles/nosig --vision trt --trt-precision bf16 --autotune   # must PASS on this device
+so101-smolvla-edge verify ~/so101/bundles/nosig --vision trt --trt-precision bf16   # must PASS on this device
 so101-smolvla-edge run ~/so101/robot.yaml
 ```
 

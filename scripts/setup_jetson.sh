@@ -62,12 +62,12 @@ Next:
   * maximum clocks for benchmarks / runs (as root):  sudo nvpmodel -m $(grep -oP 'POWER_MODEL ID=\K[0-9]+(?= NAME=MAXN)' /etc/nvpmodel.conf | head -1) && sudo jetson_clocks
     (the MAXN mode's id differs per module: 2 = MAXN_SUPER on Orin Nano, 0 = MAXN on AGX Orin;
     mode 0 on an Orin Nano is 15 W, GPU capped at 612 MHz; check with: nvpmodel -q)
+    `doctor` reports whether the GPU clock is pinned; `sudo jetson_clocks` pins it.
   * serial + camera access:  sudo usermod -aG dialout,video $USER   (log in again)
   * copy a bundle here and check it:
       uv run so101-smolvla-edge verify <bundle>  &&  uv run so101-smolvla-edge bench <bundle>
-  * fastest path:
+  * fastest path (the default kernels are Triton, no compile step):
       uv run so101-smolvla-edge build-trt <bundle> --precision bf16 int8
           (TensorRT vision engines, once per device; int8 needs <bundle>/trt/act_clip.json)
-      export TORCHINDUCTOR_CACHE_DIR=<persistent dir>   (compile once, not at every start)
-      uv run so101-smolvla-edge bench <bundle> --vision trt --trt-precision int8 --autotune
+      uv run so101-smolvla-edge bench <bundle> --vision trt --trt-precision int8
 MSG
