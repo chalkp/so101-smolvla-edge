@@ -176,6 +176,7 @@ class OVEngine:
             )
         self.n_steps, self.dt = ir["n_steps"], np.float32(ir["dt"])
         self.int8 = ir.get("int8", [])  # stages built with int8 weights (build-ov --int8)
+        self.w8a8 = ir.get("w8a8", [])  # stages with int8 activations too (build-ov --w8a8-vision)
         self.time = np.load(d / "time.npy").astype(np.float32)  # (n_steps, 1, 1, exp_dim)
         with safe_open(str(bundle / "model.safetensors"), "np") as f:  # only six small tensors
 
@@ -215,10 +216,12 @@ class OVEngine:
                 )
             cfg = {"PERFORMANCE_HINT": "LATENCY"}
             if dev == "CPU":
-                # compute exactly what the graph says: float32, and no int8 activations on top
-                # of int8 weights (the CPU plugin's default for them)
+                # compute exactly what the graph says: float32, no int8 activations on top of
+                # int8 weights (the CPU plugin's default for them), and Q/DQ pairs as written
+                # rather than rewritten into its own int8 kernels, which round differently
                 cfg["INFERENCE_PRECISION_HINT"] = "f32"
                 cfg["DYNAMIC_QUANTIZATION_GROUP_SIZE"] = 0
+                cfg["LP_TRANSFORMS_MODE"] = False
             if dev.startswith("NPU") and turbo:
                 cfg["NPU_TURBO"] = True
             if cache:

@@ -357,13 +357,14 @@ def build_ir(
     out: str | Path | None = None,
     fp16: bool = True,
     int8: tuple[str, ...] = (),
+    act_clip: dict[str, float] | None = None,
 ) -> Path:
     """Convert a bundle to OpenVINO IR, one static graph per stage, and return the directory.
 
     `out` defaults to <bundle>/openvino. `fp16` stores the weights as float16: half the size,
     exact for the checkpoint's bf16 weights unless tiny, and the CPU plugin still computes in
     float32. `int8` names the stages (of `ov_engine.STAGES`) whose large weights are stored as
-    int8 instead, see `int8_weights`.
+    int8 instead, see `int8_weights`. `act_clip` makes the vision graph W8A8, see `w8a8_vision`.
     """
     from .bundle import load_bundle
     from .ov_engine import core
@@ -374,6 +375,8 @@ def build_ir(
     unknown = set(int8) - set(STAGES)
     if unknown:
         raise ValueError(f"int8: unknown stage(s) {sorted(unknown)}; the stages are {STAGES}")
+    if act_clip and "vision" in int8:
+        raise ValueError("vision is either W8A8 (act_clip) or int8 weights, not both")
     out = Path(out) if out else ir_dir(bundle)
     out.mkdir(parents=True, exist_ok=True)
     model, meta, ex = load_bundle(bundle, "cpu", torch.float32, "fp32")
@@ -388,8 +391,11 @@ def build_ir(
     with torch.no_grad(), warnings.catch_warnings():
         warnings.simplefilter("ignore")  # the tracer noting that shapes become constants
         for name, (module, inputs, outputs) in graphs(model, ex["lang.emb"]).items():
-            example = tuple(torch.zeros(shape) for shape in inputs.values())
-            ovm = ov.convert_model(module.eval(), example_input=example)
+            if name == "vision" and act_clip:
+                ovm = w8a8_vision(bundle, s, act_clip, out)
+            else:
+                example = tuple(torch.zeros(shape) for shape in inputs.values())
+                ovm = ov.convert_model(module.eval(), example_input=example)
             for port, in_name in zip(ovm.inputs, inputs, strict=True):
                 port.get_tensor().set_names({in_name})
             ovm.reshape({in_name: list(shape) for in_name, shape in inputs.items()})
@@ -409,6 +415,7 @@ def build_ir(
         "weights": weights_id(bundle),
         "weights_fp16": fp16,
         "int8": sorted(int8),
+        "w8a8": ["vision"] if act_clip else [],
         "openvino": ov.__version__,
         "torch": torch.__version__,
         "n_steps": s.n_steps,
@@ -417,3 +424,23 @@ def build_ir(
     }
     (out / "meta.json").write_text(json.dumps(ir_meta, indent=1))
     return out
+
+
+def w8a8_vision(bundle: str | Path, spec, act_clip: dict[str, float], work: Path):
+    """The vision graph for one camera with int8 weights and int8 activations.
+
+    This is the graph `build-trt --precision int8` gives TensorRT: the tower exported to ONNX and
+    every linear wrapped in Q/DQ nodes, weights per output channel and inputs per tensor clipped
+    at `act_clip` (`trt_vision.quantize_onnx`). The NPU computes what that graph defines, so the
+    Orin and the NPU run the same int8 vision. Attention, norms and the patch embedding stay float.
+    """
+    import openvino as ov
+
+    from .trt_vision import export_onnx, quantize_onnx
+
+    plain = export_onnx(bundle, work / "vision1.onnx", cams=1)
+    quant = quantize_onnx(plain, work / "vision1_int8.onnx", spec, act_clip)
+    ovm = ov.convert_model(str(quant))
+    plain.unlink()
+    quant.unlink()
+    return ovm

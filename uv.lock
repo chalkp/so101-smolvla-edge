@@ -2456,6 +2456,7 @@ jp7 = [
     { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
 ]
 npu = [
+    { name = "onnx" },
     { name = "openvino" },
     { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
     { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp6') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-desktop' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-jp7') or (extra == 'extra-18-so101-smolvla-edge-jp6' and extra == 'extra-18-so101-smolvla-edge-npu') or (extra == 'extra-18-so101-smolvla-edge-jp7' and extra == 'extra-18-so101-smolvla-edge-npu')" },
@@ -2474,6 +2475,7 @@ viz = [
 requires-dist = [
     { name = "numpy", specifier = ">=1.24" },
     { name = "nvidia-cudss-cu12", marker = "extra == 'jp6'" },
+    { name = "onnx", marker = "extra == 'npu'", specifier = ">=1.17" },
     { name = "onnx", marker = "extra == 'trt'", specifier = ">=1.17" },
     { name = "opencv-python-headless", specifier = ">=4.8" },
     { name = "openvino", marker = "extra == 'npu'", specifier = ">=2026.2" },

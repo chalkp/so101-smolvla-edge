@@ -17,7 +17,7 @@ dependencies = [
 jp7 = ["torch>=2.14"]  # JetPack 7 (CUDA 13, Python 3.12), torch from pytorch.org cu132
 jp6 = ["torch==2.11.0; python_version == '3.10'", "nvidia-cudss-cu12"]  # JetPack 6, jetson-ai-lab
 desktop = ["torch>=2.9"]  # x86 with an NVIDIA driver >= 580, torch from pytorch.org cu130
-npu = ["torch>=2.6", "openvino>=2026.2"]  # Intel Core Ultra; torch only builds the graphs
+npu = ["torch>=2.6", "openvino>=2026.2", "onnx>=1.17"]  # Intel Core Ultra; torch only builds graphs
 openvino = ["openvino>=2026.2"]  # OpenVINO's CPU plugin next to CUDA torch, to cross-check graphs
 export = ["transformers>=4.50,<5"]  # the tokenizer, for `export`
 trt = ["onnx>=1.17"]  # the ONNX export for `build-trt`; TensorRT comes from JetPack or pip

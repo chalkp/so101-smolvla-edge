@@ -190,3 +190,78 @@ def test_npu_matches_reference_and_runs_on_the_npu():
     assert np.abs(out - g["actions_fp32"]).max() < 3e-2
     # the kernel driver saw the NPU work, not just OpenVINO
     assert ov_engine.npu_busy_us() - busy > 50_000 * len(out)
+
+
+def test_w8a8_vision_is_the_tensorrt_int8_graph(tiny_bundle, tmp_path):
+    """`build-ov --w8a8-vision` computes the vision tower with int8 weights per output channel and
+    int8 inputs per tensor clipped at act_clip, as `build-trt --precision int8` does.
+
+    Checked one linear at a time: with all of them quantized, an input on a rounding boundary in
+    an early layer rounds the other way and the step spreads through attention to every row.
+    """
+    import openvino as ov
+
+    from so101_smolvla_edge.model.bundle import load_bundle
+    from so101_smolvla_edge.model.ov_graph import build_ir
+    from so101_smolvla_edge.model.smolvla import SmolVLA
+    from so101_smolvla_edge.model.trt_vision import export_onnx, quantize_onnx
+
+    bundle = tiny_bundle()
+    model, _, _ = load_bundle(bundle, "cpu", torch.float32, "fp32")
+    s = model.spec
+    px = torch.rand(1, 3, s.image_size, s.image_size, generator=torch.Generator().manual_seed(0))
+    px = px * 2 - 1
+    vision = {"vis.patch.w": "patch", "conn.w": "conn"}
+    vision |= {
+        f"vis.{i}.{n}.w": f"vis.{i}.{n}"
+        for i in range(s.vis_layers)
+        for n in ("qkv", "out", "fc1", "fc2")
+    }
+    clip = {}
+
+    def calibrate(self, x, w, b=None):
+        if w in vision:
+            clip[vision[w]] = max(clip.get(vision[w], 0.0), float(x.abs().max()))
+        return SmolVLA.lin(self, x, w, b)
+
+    def fake_quant(key):
+        def lin(self, x, w, b=None):
+            if vision.get(w) != key:
+                return SmolVLA.lin(self, x, w, b)
+            xs = clip[key] / 127.0
+            xq = torch.clamp(torch.round(x / xs), -128, 127) * xs
+            W = self.p(w)
+            ws = (W.abs().amax(1, keepdim=True) / 127.0).clamp(min=1e-8)
+            Wq = torch.clamp(torch.round(W / ws), -127, 127) * ws
+            return torch.nn.functional.linear(xq, Wq, None if b is None else self.p(b))
+
+        return lin
+
+    with torch.no_grad():
+        model.lin = calibrate.__get__(model)
+        plain = model.encode_images(px).numpy()
+    cfg = {"INFERENCE_PRECISION_HINT": "f32", "LP_TRANSFORMS_MODE": False}  # as OVEngine on CPU
+    onnx = export_onnx(bundle, tmp_path / "vision.onnx", cams=1)
+    for key in vision.values():
+        with torch.no_grad():
+            model.lin = fake_quant(key).__get__(model)
+            want = model.encode_images(px).numpy()
+        graph = quantize_onnx(onnx, tmp_path / "q.onnx", s, {key: clip[key]})
+        got = CORE.compile_model(ov.convert_model(str(graph)), "CPU", cfg)({0: px.numpy()})[0]
+        # float32 noise on one CPU, a few inputs rounding the other way on another; a wrong
+        # scale axis or clip is off by several percent
+        assert np.abs(got - want).max() < 1e-2 * np.abs(want).max(), key
+        assert np.abs(want - plain).max() > 1e-3 * np.abs(want).max(), key  # quantized at all
+
+    out = build_ir(bundle, fp16=False, act_clip=clip)
+    assert json.loads((out / "meta.json").read_text())["w8a8"] == ["vision"]
+    got = CORE.compile_model(str(out / "vision.xml"), "CPU", cfg)({"px": px.numpy()})["rows"]
+    assert got.shape == plain.shape
+    assert 1e-3 < np.abs(got - plain).max() / np.abs(plain).max() < 5e-2
+
+
+def test_vision_is_w8a8_or_int8_weights_not_both(tiny_bundle):
+    from so101_smolvla_edge.model.ov_graph import build_ir
+
+    with pytest.raises(ValueError):
+        build_ir(tiny_bundle(), int8=("vision",), act_clip={"conn": 1.0})
