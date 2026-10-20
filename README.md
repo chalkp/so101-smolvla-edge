@@ -4,8 +4,8 @@ SmolVLA inference on edge accelerators and fail-safe control for a bimanual SO-1
 The CUDA engine (Jetson Orin, desktop GPUs) and the OpenVINO engine (Intel NPU) share one model
 definition, one bundle format, one CLI (`so101-smolvla-edge`) and one robot process.
 
-- **CUDA engine**: the whole action chunk as one CUDA graph, the vision tower in TensorRT, and
-  torch.compile with autotuned GEMMs for the prefix pass.
+- **CUDA engine**: the whole action chunk as one CUDA graph, the vision tower in TensorRT, and the
+  prefix pass and denoising loop on hand-written Triton kernels.
 - **OpenVINO engine**: the same policy as three static graphs on the NPU of a Core Ultra laptop.
 - **Robot process**: Feetech STS3215 bus driver, calibration, chunk executor, leader-arm teleop,
   episode recording and a safety layer that reads load, current, temperature and voltage every tick.
@@ -20,32 +20,38 @@ the training code's float32 output on the bundle's two reference observations (`
 
 **Jetson Orin Nano Super 8 GB** (JetPack 7.2.1, MAXN SUPER, GPU clock pinned), trained bundle:
 
-| engine | per chunk | prefix | denoise | max error |
-|---|---|---|---|---|
-| CUDA graph | 172.0 ms | 20.7 ms | 54.5 ms | 5.6e-3 rad |
-| + TensorRT vision, int8 | 135.0 ms | 20.7 ms | 54.5 ms | |
-| **+ `--autotune`** | **110.2 ms** | **12.0 ms** | **39.1 ms** | 7.8e-3 rad |
+| engine | per chunk | prefix | denoise | start | max error |
+|---|---|---|---|---|---|
+| CUDA graph, torch kernels | 172.0 ms | 20.7 ms | 54.5 ms | 2 s | 5.6e-3 rad |
+| + TensorRT vision, int8 | 135.0 ms | 20.7 ms | 54.5 ms | 3 s | |
+| + `--autotune` (the previous best) | 110.2 ms | 12.0 ms | 39.1 ms | 37 s, cached | 7.8e-3 rad |
+| **Triton kernels + TensorRT int8 vision** (default) | **101.5 ms** | **9.7 ms** | **33.2 ms** | **3 s** | 9.1e-3 rad |
+| Triton kernels + TensorRT bf16 vision | 121.0 ms | 9.7 ms | 33.3 ms | 3 s | 2.8e-3 rad |
 
-The int8 vision was evaluated on LeHome against bf16 and came out level.
+Vision is the remaining 58 ms. At the robot's 0.5 s replan period a chunk takes 101.7 ms.
 
 **Intel Core Ultra 7 355 NPU** (OpenVINO 2026.4, NPU driver 1.38), trained bundle, one chunk
 every 0.5 s like the robot:
 
 | graphs | per chunk | vision | max error |
 |---|---|---|---|
-| **float16** | **138.4 ms** | **81.3 ms** | 2.4e-3 rad |
+| float16 | 138.4 ms | 81.3 ms | 2.4e-3 rad |
 | int8 denoising weights (`build-ov --int8 denoise`) | 130.8 ms | 81.1 ms | 9.2e-3 rad |
+| **W8A8 vision** (`build-ov --w8a8-vision`) | **114.9 ms** | **57.9 ms** | 8.1e-3 rad |
+| W8A8 vision + int8 denoising weights | 108.0 ms | 57.8 ms | 3.2e-3 rad |
 
-The int8 denoising weights have not been evaluated on LeHome. Vision is the largest stage: int8
-activations there would cut it further but need a calibration this repository does not carry yet.
+W8A8 vision is the graph the Orin's TensorRT int8 vision runs, from the same calibration, so the
+two devices compute the same int8 tower. That int8 vision was evaluated on LeHome against bf16
+and came out level; the int8 denoising weights have not been evaluated that way.
 
 **RTX 3080** (12 GB, 70 SMs), stand-in bundle (pretrained `smolvla_base` weights, so the error is
 against this package's float32 engine):
 
 | engine | per chunk | prefix | denoise | max error |
 |---|---|---|---|---|
-| CUDA graph | 36.1 ms | 3.2 ms | 16.9 ms | 3.4e-3 rad |
-| + TensorRT vision (bf16) | 32.6 ms | 3.3 ms | 17.0 ms | |
+| CUDA graph, torch kernels | 36.1 ms | 3.2 ms | 16.9 ms | 3.4e-3 rad |
+| Triton kernels | 25.6 ms | 1.9 ms | 7.1 ms | 2.4e-3 rad |
+| Triton kernels + TensorRT vision (bf16) | 22.1 ms | 2.0 ms | 7.1 ms | 4.1e-3 rad |
 
 ## Install
 
@@ -61,8 +67,8 @@ whose lock pins the JetPack torch wheels. Both read the same `pyproject.toml`.
 | bundle export | `pixi install -e export` | `default` plus transformers |
 | anything else | `uv sync --extra desktop --extra dev` | the uv fallback (`--extra npu` for an NPU) |
 
-On a Jetson, pin the GPU clock before a robot run, or every chunk after an idle gap starts at the
-lowest clock:
+On a Jetson, `doctor` says whether the GPU clock is pinned. Pin it before a robot run, or every
+chunk after an idle gap starts at the lowest clock:
 
 ```bash
 sudo nvpmodel -m 2 && sudo jetson_clocks      # 2 = MAXN_SUPER on an Orin Nano (check nvpmodel -q)
@@ -78,10 +84,10 @@ so101-smolvla-edge export <ckpt>/pretrained_model bundles/nosig --golden obs.npz
 # Jetson: copy the bundle over, then
 so101-smolvla-edge build-trt bundles/nosig --precision bf16 int8   # once per device
 so101-smolvla-edge verify bundles/nosig --vision trt --trt-precision int8
-so101-smolvla-edge bench bundles/nosig --vision trt --trt-precision int8 --autotune --profile
+so101-smolvla-edge bench bundles/nosig --vision trt --trt-precision int8 --profile
 
 # Intel NPU instead
-so101-smolvla-edge build-ov bundles/nosig
+so101-smolvla-edge build-ov bundles/nosig --w8a8-vision            # needs bundles/nosig/trt/act_clip.json
 so101-smolvla-edge verify bundles/nosig --backend openvino
 so101-smolvla-edge bench bundles/nosig --backend openvino --profile --period 0.5
 
@@ -95,7 +101,7 @@ so101-smolvla-edge run robot.yaml                                 # enable, go, 
 pixi run sim bundles/nosig
 ```
 
-The pixi tasks forward their arguments: `pixi run verify bundles/nosig --vision trt`.
+The pixi tasks forward their arguments: `pixi run verify bundles/nosig --kernels torch`.
 
 ## How the CUDA engine works
 
@@ -109,18 +115,38 @@ prefix, the action expert) checked against the training code by the bundle's ref
 - **Work hoisted out of the loop.** The expert's projections of the prefix keys and values, the
   time embedding and the masks are computed once per chunk; a step only writes its own 50 rows.
 - **TensorRT vision** (`vision: trt`), bf16 or W8A8 int8, enqueued inside the same graph.
-- **torch.compile** per stage; `autotune` also autotunes the prefix GEMMs. The denoising GEMMs get
-  slower when autotuned, so they keep the default mode.
+- **Triton kernels** (`kernels: auto`, `src/so101_smolvla_edge/kernels/`), seven per transformer
+  layer instead of about thirty: a GEMM for few rows with the residual add, SiLU gate or bias fused
+  and a deterministic split-K, grouped-query attention that reads the 5 kv heads in place with
+  RoPE and the mask computed in-kernel, RoPE plus the K/V cache write, and RMSNorm. A graph replay
+  is bit-identical to an eager call.
 
-To see where a GPU's time goes:
+The tiles come from sweeps on each kind of GPU (`scripts/tune_gemm.py`). They want opposite shapes:
+at 50 rows the 3080 needs narrow column tiles to fill 70 SMs, while the Orin's 8 SMs stream the
+expert's weights fastest with wide ones, and its prefix pass with all 200 rows in one tile so each
+weight is read once. In the denoising loop on the Orin the expert's GEMMs stream about 70 GB/s of
+the ~100 GB/s the memory gives.
+
+To tune another GPU and see where its time goes:
 
 ```bash
+pixi run tune-gemm --shapes expert          # and --shapes prefix
 pixi run -e profile nsys-profile bundles/nosig --label mine -- --vision trt
 ```
 
 `nsys-profile` attributes every kernel of a graph replay to its stage and writes
 `profiles/<label>/summary.md`. On a Jetson use JetPack's newest nsys
 (`/opt/nvidia/nsight-systems/<version>/bin`).
+
+Tried and dropped:
+
+- int8 weight-only GEMMs on the Orin: the int8 to bf16 conversion makes them ALU-bound, 179 µs
+  against 176 µs for bf16 over the expert's five shapes. torch's int4 and int8 weight-only kernels
+  were slower still.
+- RMSNorm and SiLU as GEMM prologues, the float32 time MLP in Triton, and a separate split-K
+  reduction kernel: each slower than what is there.
+- `--autotune` with the Triton kernels and TensorRT vision: nothing is left for it to compile.
+- TensorRT's builder optimization level 5 for the vision plan: the same speed as the default.
 
 ## How the OpenVINO engine works
 
@@ -168,12 +194,13 @@ temperature, voltage), `events.jsonl` and `chunks.jsonl`.
 
 ## Tests
 
-`pixi run test` runs everything this machine can: the engine's graph replay against eager
-execution (bit-identical), the OpenVINO graphs against `SmolVLA` on the CPU plugin, the servo protocol, the bus over a pty
+`pixi run test` runs everything this machine can: the Triton kernels against the torch
+expressions they replace, the engines against each other (graph replay bit-identical to eager),
+the OpenVINO graphs against `SmolVLA` on the CPU plugin, the servo protocol, the bus over a pty
 against simulated servos, calibration, the executor, every safety fault path, and end-to-end
 runner runs. `SO101_BUNDLE=<bundle>` adds parity against the bundle's reference actions (CUDA)
 and, on a machine with one, the NPU. `pixi run lint` is the check CI runs.
 
 CI (`.github/workflows/ci.yml`) runs ruff, the tests in the CPU `npu` environment with pixi, and
-the uv fallback from `uv.lock` with a wheel build. Hosted runners have no GPU or NPU, so the CUDA
-and NPU tests run on the devices.
+the uv fallback from `uv.lock` with a wheel build. Hosted runners have no GPU or NPU, so the CUDA,
+Triton and NPU tests run on the devices.
